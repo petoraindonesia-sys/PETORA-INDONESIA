@@ -129,7 +129,7 @@ Dua area aplikasi: **Operational Application** (Owner, Supervisor, Dokter, Staff
 |---|---|---|
 | Supabase | Backend penuh: database, autentikasi, penyimpanan berkas, realtime, fungsi server | Belum ada akun, perlu dibuatkan |
 | Vercel atau Cloudflare | Hosting aplikasi web | Belum ada akun, perlu dibuatkan |
-| Payment gateway | Pembayaran online | **Tidak ada (Dikonfirmasi)**: pembayaran dicatat manual oleh kasir |
+| Payment gateway | Pembayaran online | **Tidak ada** : pembayaran dicatat manual oleh kasir |
 | WhatsApp/email | Notifikasi ke pemilik | Tidak di v1 |
 
 ## 8. Batasan
