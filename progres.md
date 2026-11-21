@@ -271,3 +271,44 @@
 - **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
 - **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
 - **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
+
+
+## P0.8.1 — Validasi Project Supabase PETORA
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-1-supabase-project-connection
+- **Tujuan:** Menghubungkan pekerjaan P0.8 dengan project Supabase PETORA yang aktif dan memvalidasi kondisi database sebelum perubahan schema/Auth.
+- **Scope:** Memverifikasi identitas project, region, status, URL API, akses database, tabel, dan riwayat migration; memperbarui catatan progres tanpa menyimpan credential; mempertahankan keputusan autentikasi username + PIN sebagai PENDING sampai mekanisme sesi Supabase tervalidasi.
+- **Acceptance criteria:**
+  - Project Supabase yang benar teridentifikasi dan berstatus ACTIVE_HEALTHY.
+  - Region dan project ref cocok dengan target PETORA.
+  - Koneksi database dapat diperiksa melalui Supabase MCP.
+  - Kondisi awal tabel dan migration tercatat berdasarkan hasil aktual.
+  - Tidak ada secret, database password, service-role key, atau credential di repository.
+  - Tidak ada schema/Auth yang dibuat sebelum desain login, model data, RLS, dan prosedur migration dapat diverifikasi.
+  - File progres diperbarui pada branch yang sama; perubahan tetap UNMERGED sampai benar-benar digabung.
+- **Temuan awal:** Project `petora-indonesia` dengan ref `tpqrcjsmijzbtgmertdo` ditemukan dalam organisasi yang telah dikonfirmasi; status `ACTIVE_HEALTHY`, region `ap-southeast-1`, PostgreSQL `17.12`. URL API: `https://tpqrcjsmijzbtgmertdo.supabase.co`.
+- **Pemeriksaan database awal:** Supabase MCP berhasil membaca project. Schema `public` belum memiliki tabel; daftar migration database kosong.
+- **Keterbatasan saat mulai:** Belum ada migration SQL di repository selain `supabase/config.toml` dan `supabase/AGENTS.md`; belum tersedia bukti mekanisme username + PIN yang menghasilkan sesi Supabase Auth valid. Tidak ada perubahan schema/Auth cloud pada langkah inspeksi ini.
+
+
+### Catatan penyelesaian P0.8.1 — validasi project Supabase
+
+- **Status akhir:** VERIFIED untuk identifikasi project dan konektivitas database; P0.8 Auth tetap BLOCKED/PENDING secara terpisah.
+- **Temuan project:** Project bernama `petora-indonesia` ternyata sudah dibuat pada 2026-11-20 sebelum percobaan pembuatan pada sesi ini. Permintaan create baru ditolak karena nama project sudah ada. Tidak dibuat project duplikat.
+- **Biaya:** Pemeriksaan biaya aktual mengembalikan US$0/bulan. Persetujuan biaya US$0 diberikan Owner; tidak ada biaya berulang yang dikonfirmasi oleh tool.
+- **Identitas project:** Ref `tpqrcjsmijzbtgmertdo`; region `ap-southeast-1`; status `ACTIVE_HEALTHY`; PostgreSQL `17.12`; URL API `https://tpqrcjsmijzbtgmertdo.supabase.co`.
+- **Verifikasi database:** `list_tables` mengembalikan nol tabel pada schema `public`; `list_migrations` mengembalikan daftar kosong. Query SQL read-only berhasil mengembalikan database `postgres`, role `postgres`, server version `17.12`, schema `public`.
+- **File berubah:** Hanya `progres.md` pada branch ini. Tidak ada secret/credential yang ditulis.
+- **Schema/Auth:** Tidak ada migration, tabel, policy, akun, atau konfigurasi Auth yang dibuat. Login username + PIN tetap PENDING karena desain sesi yang aman belum dibuktikan.
+- **Test/CI:** Pemeriksaan status project, enumerasi tabel/migration, dan query SQL read-only berhasil melalui Supabase MCP. Tidak ada perubahan kode sehingga CI aplikasi tidak dijalankan.
+- **Commit awal progres:** `a89264e23f218c200916d9fb82766dd4bc6938a2`.
+- **Status merge:** UNMERGED; branch menunggu PR dan belum masuk main.
+
+
+#### Koreksi status PR P0.8.1
+
+- **PR:** #10 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/10
+- **Status:** OPEN, UNMERGED.
+- **Head saat PR dibuat:** `8f76f5c258f7d9fdc1b8cfe577035d1a58e14066`.
+- **Catatan:** PR hanya berisi dokumentasi hasil validasi project dan konektivitas Supabase. Belum digabung ke `main`; pemeriksaan merge/CI lanjutan belum dilakukan.
