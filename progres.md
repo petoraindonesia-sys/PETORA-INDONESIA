@@ -271,3 +271,39 @@
 - **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
 - **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
 - **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
+
+
+## P0.8 lanjutan — Bootstrap project Supabase PETORA
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-supabase-project-bootstrap
+- **Tujuan:** Menghubungkan konfigurasi Supabase repository ke project cloud PETORA yang baru dibuat dan memverifikasi kesiapan awal project tanpa membuat schema/Auth spekulatif.
+- **Scope:** Mencatat project ref non-secret pada supabase/config.toml; memeriksa status project, URL API, konfigurasi CLI, instruksi Supabase, migration/test yang sudah ada, dan kesiapan database; mempertahankan blocker autentikasi username + PIN sampai mekanisme sesi Supabase terbukti.
+- **Acceptance criteria:** Project ref repository sama dengan project Supabase aktual; project berstatus ACTIVE_HEALTHY; konfigurasi dan file terkait dibaca kembali; tidak ada secret/credential di repository; tidak ada schema/policy/Auth buatan asumsi; status progres membedakan konfigurasi IMPLEMENTED dari database/Auth VERIFIED.
+- **Project cloud:** petora-indonesia — ref `tpqrcjsmijzbtgmertdo`, region `ap-southeast-1`, PostgreSQL 17, estimasi US$0/bulan, status ACTIVE_HEALTHY saat bootstrap.
+- **Batas verifikasi:** Belum ada bukti koneksi CLI lokal, migration, RLS, Auth, atau database security test. Project aktif/healthy hanya membuktikan resource berhasil dibuat, bukan kesiapan fitur aplikasi.
+
+
+### Catatan penyelesaian bootstrap project Supabase
+- **Status akhir tahap bootstrap:** VERIFIED untuk pembuatan project, konfigurasi project ref, dan konektivitas database dasar. Status ini tidak mencakup verifikasi schema, RLS, Auth, atau fitur aplikasi.
+- **File diubah:** `supabase/config.toml`, `progres.md`.
+- **Project cloud:** `petora-indonesia`, ref `tpqrcjsmijzbtgmertdo`, region `ap-southeast-1`, status `ACTIVE_HEALTHY`, PostgreSQL 17.12.
+- **Konfigurasi:** `supabase/config.toml` kini memakai project ref aktual `tpqrcjsmijzbtgmertdo`; file dibaca kembali setelah perubahan.
+- **Uji konektivitas:** Query `select current_database(), current_user, version()` berhasil; hasil menunjukkan database `postgres`, role `postgres`, PostgreSQL 17.12.
+- **Kondisi database awal:** Tidak ada migration terdaftar dan belum ada tabel pada schema `public`. Tidak ada schema, tabel, policy, Auth, atau data seed yang dibuat.
+- **Biaya:** Estimasi pembuatan project US$0/bulan pada paket Free ketika dibuat.
+- **Commit konfigurasi:** `1d58ce7001da4e485d69cde548521d42e160915c`.
+- **Commit entri IN_PROGRESS:** `0d75d83b4699137b85ccf184768310202e7fdaae`.
+- **PR:** #9 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/9.
+- **Status merge:** UNMERGED — PR #9 masih terbuka dan belum masuk `main`.
+- **CI/build:** Tidak dijalankan; workflow web CI hanya terpicu oleh perubahan `apps/web/**` atau workflow-nya. Perubahan ini hanya pada konfigurasi Supabase dan progres.
+- **Blocker lanjutan P0.8:** Implementasi username + PIN 6 digit, session revocation, RBAC, RLS, dan migration tetap BLOCKED/PENDING sampai mekanisme autentikasi yang menghasilkan sesi Supabase valid dipilih dan diuji. ADR-0001 tetap menjadi kontrak sementara; tidak ada asumsi login baru.
+
+
+#### Catatan teknis lanjutan — batas keamanan PIN 6 digit
+- Dokumentasi Supabase Password Security terkini menyarankan panjang password minimal 8 karakter; kombinasi angka saja dengan panjang 8 diperkirakan memiliki sekitar 2^27 kemungkinan. Kontrak PETORA tetap PIN 6 digit dan tidak diubah oleh catatan ini.
+- Rate limit Auth bawaan Supabase untuk sign-in/password token terutama dibatasi berdasarkan IP, dengan default token endpoint 150 request per 5 menit; ini tidak membuktikan pembatasan per akun yang cukup untuk ruang PIN 6 digit.
+- Supabase mendukung Edge Functions untuk validasi/orkestrasi server-side dan menerapkan rate limit di fungsi, tetapi contoh resmi rate limiting menggunakan layanan eksternal seperti Redis. Untuk PETORA, opsi database-native (counter/lockout atomik di PostgreSQL) perlu dirancang dan diuji sebelum dipilih.
+- **Keputusan masih PENDING:** adapter server-side yang memetakan username ke identifier internal Supabase Auth, penggunaan PIN sebagai password Auth, serta ambang/throttle per akun dan IP. Tidak ada Edge Function, tabel kredensial, atau Auth user yang dibuat.
+- **Risiko:** PIN 6 digit memiliki ruang tebakan terbatas dan tidak setara dengan password panjang yang direkomendasikan. Implementasi harus memiliki proteksi brute-force per akun dan IP, respons generik, serta pengujian session/RLS; jangan deploy sebelum semua itu dibuktikan.
+- **Rujukan:** https://supabase.com/docs/guides/auth/password-security ; https://supabase.com/docs/guides/auth/rate-limits ; https://supabase.com/docs/guides/functions/examples/rate-limiting .
