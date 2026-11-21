@@ -83,3 +83,49 @@
 - **Branch:** docs/p0-3-scoped-agent-guides
 - **Status merge:** UNMERGED — belum dibuat PR dan belum masuk main.
 - **Catatan:** Dokumen instruksi tersedia di branch kerja. Belum ada verifikasi runtime, test, atau deployment.
+
+
+## Koreksi status merge P0.3
+- **Status:** MERGED
+- **PR:** #1 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/1
+- **Merge commit:** 079ab8a4051703866201aa294e83391c86779dde
+- **Tanggal tindakan:** 2026-11-21
+- **Catatan koreksi:** Catatan P0.3 sebelumnya menyebut UNMERGED karena dibuat sebelum PR digabung. PR #1 kini berhasil digabung ke main; riwayat sebelumnya dipertahankan.
+- **CI:** Status commit merge pending, tanpa status check terlapor. Ini bukan bukti verifikasi aplikasi.
+
+## P0.4 — Fondasi Aplikasi Web dan Supabase
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-4-app-foundation
+- **Tujuan:** Membuat fondasi teknis pertama PETORA pada repository yang sebelumnya hanya berisi dokumentasi.
+- **Scope:** Scaffold Next.js App Router + TypeScript + Tailwind CSS pada apps/web; menetapkan token dasar Apple Design; menyiapkan konfigurasi lokal Supabase tanpa membuat schema bisnis, policy, akun, atau project cloud yang belum disetujui; dokumentasi cara menjalankan.
+- **Acceptance criteria:**
+  - Aplikasi web memiliki package manifest, konfigurasi TypeScript/Next.js, App Router, dan Tailwind yang saling konsisten.
+  - Design tokens Apple Design tersedia secara terpusat dan dipakai pada global styles.
+  - Halaman awal hanya menampilkan informasi produk yang benar, tanpa data operasional contoh, CTA palsu, atau navigasi yang belum berfungsi.
+  - Konfigurasi Supabase lokal tersimpan di repository; belum menghubungkan atau mengubah project cloud.
+  - README menjelaskan prasyarat, instalasi, dan perintah pengembangan yang aktual.
+  - Tidak ada secret, credential, atau keputusan bisnis baru.
+  - File dibaca kembali; keterbatasan test/build akibat tidak tersedianya runtime lokal dicatat apa adanya.
+- **Batasan verifikasi:** Akses saat ini hanya melalui GitHub connector; tidak tersedia terminal repository untuk memasang dependency atau menjalankan lint/typecheck/build/Supabase CLI. Status tidak boleh dinaikkan menjadi VERIFIED tanpa CI/test yang berhasil.
+
+
+### Catatan penyelesaian P0.4
+- **Status akhir:** IMPLEMENTED
+- **File dibuat:** README.md, .gitignore, apps/web/package.json, apps/web/tsconfig.json, apps/web/next.config.ts, apps/web/postcss.config.mjs, apps/web/eslint.config.mjs, apps/web/next-env.d.ts, apps/web/app/layout.tsx, apps/web/app/page.tsx, apps/web/app/globals.css, supabase/config.toml; progres.md diperbarui.
+- **Implementasi frontend:** Scaffold Next.js App Router + TypeScript + Tailwind CSS v4; metadata Bahasa Indonesia; halaman awal informatif tanpa data operasional palsu atau tombol/navigasi yang belum berfungsi; token Apple Design dasar terpusat.
+- **Implementasi Supabase:** Konfigurasi CLI lokal minimal. Belum ada schema bisnis, migration, policy, Auth, project ref, atau perubahan project cloud.
+- **Dependency yang ditetapkan:** Next.js 16.4.6, React 19.3.1, Tailwind CSS 4.3.5; versi langsung dipatok di package.json.
+- **Pemeriksaan repository:** Seluruh file yang dibuat berhasil dibaca kembali dari branch. JSON package.json dan tsconfig.json dapat diperiksa secara tekstual; belum dilakukan instalasi dependency.
+- **Test/lint/typecheck/build:** Tidak dijalankan karena akses eksekusi repository/terminal tidak tersedia pada sesi ini. Belum ada CI run. Status bukan VERIFIED.
+- **Keterbatasan:** package-lock.json belum tersedia; README mencatat agar npm install menghasilkan lockfile yang kemudian di-commit sebelum mengaktifkan instalasi CI/deployment yang reproducible.
+- **Commit progres awal:** f2d273c3ee6f973e79bb7b56494ad503e5870164 (dikoreksi dengan commit pemulihan riwayat 7e608e0fb8b0db90d8f1bd8aab1969c3369c3aa1).
+- **Commit scaffold:** a4e41cd25ec0dff2f86bbca8bcd529a579b392b3
+- **Branch:** feat/p0-4-app-foundation
+- **Status merge:** UNMERGED — PR belum dibuat pada saat catatan ini ditulis.
+
+
+#### Koreksi status PR P0.4
+- **PR:** #2 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/2
+- **Status PR:** OPEN, UNMERGED
+- **Head commit:** 394725c9e6533bb06e5e117debccdec17d26c758
+- **Catatan koreksi:** Baris sebelumnya menyebut PR belum dibuat karena ditulis sebelum PR dibuka. PR #2 kini sudah dibuat; belum digabung ke main.
