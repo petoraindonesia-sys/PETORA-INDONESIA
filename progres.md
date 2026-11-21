@@ -282,3 +282,19 @@
 - **Acceptance criteria:** Project ref repository sama dengan project Supabase aktual; project berstatus ACTIVE_HEALTHY; konfigurasi dan file terkait dibaca kembali; tidak ada secret/credential di repository; tidak ada schema/policy/Auth buatan asumsi; status progres membedakan konfigurasi IMPLEMENTED dari database/Auth VERIFIED.
 - **Project cloud:** petora-indonesia — ref `tpqrcjsmijzbtgmertdo`, region `ap-southeast-1`, PostgreSQL 17, estimasi US$0/bulan, status ACTIVE_HEALTHY saat bootstrap.
 - **Batas verifikasi:** Belum ada bukti koneksi CLI lokal, migration, RLS, Auth, atau database security test. Project aktif/healthy hanya membuktikan resource berhasil dibuat, bukan kesiapan fitur aplikasi.
+
+
+### Catatan penyelesaian bootstrap project Supabase
+- **Status akhir tahap bootstrap:** VERIFIED untuk pembuatan project, konfigurasi project ref, dan konektivitas database dasar. Status ini tidak mencakup verifikasi schema, RLS, Auth, atau fitur aplikasi.
+- **File diubah:** `supabase/config.toml`, `progres.md`.
+- **Project cloud:** `petora-indonesia`, ref `tpqrcjsmijzbtgmertdo`, region `ap-southeast-1`, status `ACTIVE_HEALTHY`, PostgreSQL 17.12.
+- **Konfigurasi:** `supabase/config.toml` kini memakai project ref aktual `tpqrcjsmijzbtgmertdo`; file dibaca kembali setelah perubahan.
+- **Uji konektivitas:** Query `select current_database(), current_user, version()` berhasil; hasil menunjukkan database `postgres`, role `postgres`, PostgreSQL 17.12.
+- **Kondisi database awal:** Tidak ada migration terdaftar dan belum ada tabel pada schema `public`. Tidak ada schema, tabel, policy, Auth, atau data seed yang dibuat.
+- **Biaya:** Estimasi pembuatan project US$0/bulan pada paket Free ketika dibuat.
+- **Commit konfigurasi:** `1d58ce7001da4e485d69cde548521d42e160915c`.
+- **Commit entri IN_PROGRESS:** `0d75d83b4699137b85ccf184768310202e7fdaae`.
+- **PR:** #9 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/9.
+- **Status merge:** UNMERGED — PR #9 masih terbuka dan belum masuk `main`.
+- **CI/build:** Tidak dijalankan; workflow web CI hanya terpicu oleh perubahan `apps/web/**` atau workflow-nya. Perubahan ini hanya pada konfigurasi Supabase dan progres.
+- **Blocker lanjutan P0.8:** Implementasi username + PIN 6 digit, session revocation, RBAC, RLS, dan migration tetap BLOCKED/PENDING sampai mekanisme autentikasi yang menghasilkan sesi Supabase valid dipilih dan diuji. ADR-0001 tetap menjadi kontrak sementara; tidak ada asumsi login baru.
