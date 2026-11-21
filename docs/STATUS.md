@@ -2,26 +2,23 @@
 
 ## Gambaran besar
 
-Proyek baru (Mode A) dengan fondasi + lapisan domain/service/auth yang sudah
+Proyek baru (Mode A) dengan fondasi + lapisan domain/service/auth/cabang yang sudah
 terverifikasi. Produk: aplikasi web operasional klinik hewan + pet shop, satu
 perusahaan banyak cabang, backend Postgres (local-first, tanpa Supabase — K-009), UI
 bergaya Apple, Bahasa Indonesia. Fondasi kode, modul domain murni, skema DB + RLS,
-lapisan data (withActor), service inventori & billing, dan **service autentikasi lokal
-(sesi + password scrypt)** sudah dibuat & **terverifikasi** (38 tes unit + 37 tes
-integrasi hijau; build/lint/typecheck hijau). Belum ada UI fitur lengkap (hanya login
-& placeholder /app).
+lapisan data (withActor), service inventori & billing, service autentikasi lokal, dan
+service cabang sudah dibuat & **terverifikasi** (38 tes unit + 49 tes integrasi hijau;
+build/lint/typecheck hijau). UI masih minimal (login, /app, cabang).
 
 ## Sedang dikerjakan
 
-- **Tugas**: Autentikasi lokal (gerbang masuk) + rute login/logout/me + middleware.
-  Status: **selesai & terverifikasi**. Bersiap membangun UI fitur (cabang, kasir, dst).
+- **Tugas**: UI Organisasi & cabang (Owner) + service + API + tes. Status: **selesai & terverifikasi**.
 - **Branch**: `main`.
-- **Titik berhenti**: Auth hijau; UI masih minimal (login + /app placeholder).
+- **Titik berhenti**: Cabang hijau; UI kasir/rekam medis belum.
 - **Langkah berikutnya konkret**:
-  1. UI Organisasi & cabang (Owner): CRUD cabang + zona waktu via service (RLS).
-  2. UI Kasir: buat tagihan (pakai `createInvoice`) + catat pembayaran (`recordPayment`).
-  3. UI Rekam medis (Dokter) & Pelanggan/Pasien.
-  4. Integrasi Supabase (ganti `DATABASE_URL`) & deploy — butuh akun (di luar kendali).
+  1. UI Kasir: buat tagihan (pakai `createInvoice`) + catat pembayaran (`recordPayment`).
+  2. UI Rekam medis (Dokter) & Pelanggan/Pasien.
+  3. Integrasi Supabase (ganti `DATABASE_URL`) & deploy — butuh akun (di luar kendali).
 
 ## Tumpukan jeda
 
@@ -35,15 +32,14 @@ _Kosong._
 
 ## Pekerjaan terakhir
 
-1. Migrasi `0003_auth_session.sql`: `app_session` (token hash) + `password_hash`/`email` di profiles + RLS deny. (terverifikasi)
-2. Service auth (`src/lib/auth/service.ts`): hashPassword/verifyPassword (scrypt), createSession (hash+salt), authenticate, destroySession, destroyAllSessions, login. (terverifikasi)
-3. Helper route (`src/lib/auth/session.ts`): getSession/requireActor/startSession/endSession. (terverifikasi)
-4. Rute `/api/auth/login|logout|me` + halaman login + `/app` terproteksi + middleware. (terverifikasi build)
-5. 14 tes integrasi auth (hash, login benar/salah, token hanya hash di DB, sesi dicabut/kedaluwarsa, RLS via sesi). (terverifikasi)
+1. Migrasi `0003_auth_session.sql` (sesi + password_hash/email) + service auth (scrypt, hash token) + rute login/logout/me + middleware. (terverifikasi)
+2. Service cabang (`src/lib/branches`): list/get/create/update/deactivate + validasi zona waktu; RLS Owner-only. (terverifikasi)
+3. API /api/branches (GET/POST) + /[id] (PATCH/DELETE) dengan requireActor. (terverifikasi)
+4. Halaman /app/branches (Owner): daftar + form tambah + zona waktu. (proses — belum uji browser)
+5. 12 tes integrasi cabang (Owner CRUD, Staff ditolak RLS, zona waktu invalid ditolak). (terverifikasi)
 
 ## Langkah berikutnya
 
-1. UI Organisasi & cabang (Owner) memakai service + RLS.
-2. UI Kasir & pembayaran (pakai service billing yang sudah teruji).
-3. UI Rekam medis + Pelanggan & hewan.
-4. Siapkan Supabase & deploy (Vercel) — perlu pengguna (AGENTS.md §12).
+1. UI Kasir & pembayaran (pakai service billing yang sudah teruji).
+2. UI Rekam medis + Pelanggan & hewan.
+3. Siapkan Supabase & deploy (Vercel) — perlu pengguna (AGENTS.md §12).

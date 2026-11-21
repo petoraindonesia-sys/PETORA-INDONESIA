@@ -42,6 +42,15 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Inventori & FEFO (BR-006/007) | terverifikasi | 5 tes `.itest.ts` hijau |
 | Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 9 tes `.itest.ts` hijau |
 | Autentikasi lokal (sesi + password) | terverifikasi | 14 tes `.itest.ts` hijau |
+| Cabang (BR-001/016, Owner CRUD, RLS) | terverifikasi | 12 tes `.itest.ts` hijau |
+
+## Organisasi & cabang (src/lib/branches, UI)
+
+| Fitur | Status | Kriteria selesai | Lokasi |
+|---|---|---|---|
+| Service cabang (list/get/create/update/deactivate) | terverifikasi | Owner CRUD; Staff ditolak RLS; zona waktu divalidasi | `src/lib/branches/service.ts` |
+| API /api/branches (GET/POST) + /[id] (PATCH/DELETE) | terverifikasi | build hijau; requireActor + RLS | `src/app/api/branches/` |
+| Halaman /app/branches (Owner) | proses | UI daftar + form tambah; belum uji browser | `src/app/app/branches/page.tsx` |
 
 ## Autentikasi lokal (src/lib/auth, tanpa Supabase)
 
