@@ -221,3 +221,17 @@
   - Layout dapat digunakan pada viewport mobile, tablet, dan desktop.
   - GitHub Actions install, lint, typecheck, dan build sukses.
 - **Batas verifikasi:** Belum tersedia autentikasi, data Supabase, atau browser E2E. Tahap ini membangun shell presentasi dan navigasi internal; bukan dashboard operasional terhubung data atau sistem autentikasi.
+
+
+### Catatan penyelesaian P0.7
+- **Status akhir:** VERIFIED untuk install, lint, typecheck, dan production build CI.
+- **File dibuat:** apps/web/components/app-shell.tsx, apps/web/app/dashboard/page.tsx.
+- **File diubah:** apps/web/app/page.tsx, progres.md.
+- **Implementasi:** AppShell dengan sidebar desktop, header workspace, navigasi drawer mobile, tombol tutup, backdrop, dukungan Escape, pemindahan fokus saat drawer dibuka/ditutup, dan skip link. Halaman /dashboard menyediakan navigasi anchor ke bagian Ringkasan, Klinik Hewan, Pet Shop, dan Organisasi. Halaman utama memiliki tautan aktif menuju /dashboard.
+- **Integritas data:** Tidak ada data operasional, transaksi, statistik, pengguna, cabang, atau sesi login buatan. Halaman menjelaskan bahwa data, sesi, dan hak akses menunggu integrasi Supabase/Auth.
+- **Verifikasi CI:** GitHub Actions run #23 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/actions/runs/44846442237 — SUCCESS pada commit aplikasi 15d7b8878efc3700715c9b5f37e53adc45f8385e. Verify lockfile, npm ci, lint, typecheck, production build, dan cleanup seluruhnya sukses.
+- **Pengujian yang belum dilakukan:** Belum ada browser E2E, inspeksi visual langsung, screen reader test, atau uji perangkat nyata. CI hanya memverifikasi install, lint, typecheck, dan build; belum membuktikan perilaku drawer di browser.
+- **Branch:** feat/p0-7-dashboard-shell.
+- **PR:** #5 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/5.
+- **Head commit aplikasi yang diuji:** 15d7b8878efc3700715c9b5f37e53adc45f8385e.
+- **Status merge:** UNMERGED — PR #5 menargetkan branch feat/p0-6-apple-design-system karena bergantung pada PR #4 yang belum masuk main. Jangan merge PR #5 sebelum PR #4 digabung dan target branch diperbarui.
