@@ -11,7 +11,7 @@ Platform operasional klinik hewan dan pet shop untuk satu perusahaan dengan bany
 
 ## Prasyarat
 
-- Node.js 20.9 atau lebih baru.
+- Node.js 20.9 atau lebih baru (CI menggunakan Node.js 22).
 - npm.
 - Untuk menjalankan Supabase lokal: Supabase CLI dan Docker Desktop/compatible Docker runtime.
 
@@ -19,13 +19,13 @@ Platform operasional klinik hewan dan pet shop untuk satu perusahaan dengan bany
 
 ```bash
 cd apps/web
-npm install
+npm ci
 npm run dev
 ```
 
 Buka http://localhost:3000.
 
-Perintah pemeriksaan yang tersedia dari direktori `apps/web`:
+Perintah pemeriksaan dari direktori `apps/web`:
 
 ```bash
 npm run lint
@@ -33,7 +33,11 @@ npm run typecheck
 npm run build
 ```
 
-Jalankan `npm install` terlebih dahulu. Commit pertama ini belum menyertakan `package-lock.json`; setelah dependency terpasang, commit lockfile yang dihasilkan agar instalasi CI/deployment dapat memakai `npm ci`.
+Lockfile npm berada di `apps/web/package-lock.json`. Gunakan `npm ci` untuk instalasi yang konsisten dengan lockfile; jika dependency diubah, jalankan `npm install` dan commit perubahan `package-lock.json` bersama `package.json`.
+
+## Continuous integration
+
+GitHub Actions menjalankan workflow **PETORA Web CI** saat perubahan aplikasi web didorong atau pull request dibuka ke `main`. Workflow melakukan instalasi dari lockfile, ESLint, TypeScript typecheck, dan production build.
 
 ## Menjalankan Supabase lokal
 
