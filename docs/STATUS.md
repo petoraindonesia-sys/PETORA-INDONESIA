@@ -15,7 +15,7 @@ typecheck hijau). Belum ada UI fitur & alur end-to-end; itu langkah berikutnya.
   Status: **selesai & terverifikasi** (lihat Pekerjaan terakhir). Bersiap masuk build
   fitur inti.
 - **Branch**: `main`.
-- **Titik berhenti**: Fondasi hijau. Belum ada fitur UI / alur ujung-ke-ujung.
+- **Titik berhenti**: Fondasi hijau & ter-commit (`16f06d5`). Belum ada fitur UI / alur ujung-ke-ujung.
 - **Langkah berikutnya konkret**:
   1. Autentikasi (Supabase Auth) + halaman login; middleware proteksi rute area
      `(operational)` dan `(portal)`.
