@@ -24,6 +24,14 @@ export const USER = {
 export const CUSTOMER_ID = "40000000-0000-4000-8000-000000000001";
 export const PET_ID = "40000000-0000-4000-8000-000000000002";
 
+/** Kredensial fixture untuk tes auth. */
+export const CREDENTIALS = {
+  OWNER_EMAIL: "owner@petora.test",
+  STAFF_A_EMAIL: "staff.a@petora.test",
+  PASSWORD: "rahasia123",
+  WRONG_PASSWORD: "salah-sekali",
+} as const;
+
 /** Kredensial container tes (dipakai globalSetup & getPool default). */
 export const TEST_DB = {
   container: "petora-test-pg",

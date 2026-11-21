@@ -14,11 +14,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
 import { TEST_DB, COMPANY_ID, BRANCH, USER, CUSTOMER_ID, PET_ID } from "./fixtures";
+import { hashPassword } from "@/lib/auth/service";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS = [
   join(__dirname, "..", "migrations", "0001_init.sql"),
   join(__dirname, "..", "migrations", "0002_billing_inventory.sql"),
+  join(__dirname, "..", "migrations", "0003_auth_session.sql"),
 ];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -64,7 +66,7 @@ export default async function setup() {
   });
   await client.connect();
   try {
-    // Shim auth.uid() + role authenticated (idempoten).
+    // Shim auth.uid() + role authenticated + anon (seperti Supabase).
     await client.query(`
       create schema if not exists auth;
       create or replace function auth.uid() returns uuid
@@ -74,6 +76,9 @@ export default async function setup() {
       do $$ begin
         if not exists (select 1 from pg_roles where rolname = 'authenticated') then
           create role authenticated;
+        end if;
+        if not exists (select 1 from pg_roles where rolname = 'anon') then
+          create role anon;
         end if;
       end $$;
     `);
@@ -104,13 +109,20 @@ export default async function setup() {
     async function makeUser(
       id: string,
       name: string,
-      opts: { owner?: boolean; roleCode: string; branches: string[] },
+      opts: {
+        owner?: boolean;
+        roleCode: string;
+        branches: string[];
+        email?: string;
+        password?: string;
+      },
     ) {
-      await client.query(`insert into profiles (id, full_name, is_owner) values ($1,$2,$3)`, [
-        id,
-        name,
-        opts.owner ?? false,
-      ]);
+      const email = opts.email ?? `${id}@petora.test`;
+      const passwordHash = opts.password ? await hashPassword(opts.password) : null;
+      await client.query(
+        `insert into profiles (id, full_name, is_owner, email, password_hash) values ($1,$2,$3,$4,$5)`,
+        [id, name, opts.owner ?? false, email, passwordHash],
+      );
       const roleId = (
         await client.query<{ id: string }>(`select id from role where code = $1`, [opts.roleCode])
       ).rows[0].id;
@@ -123,12 +135,23 @@ export default async function setup() {
       }
     }
 
+    const OWNER_EMAIL = "owner@petora.test";
+    const STAFF_A_EMAIL = "staff.a@petora.test";
+    const PASSWORD = "rahasia123";
+
     await makeUser(USER.OWNER, "Owner", {
       owner: true,
       roleCode: "owner",
       branches: [BRANCH.B1, BRANCH.B2, BRANCH.B3],
+      email: OWNER_EMAIL,
+      password: PASSWORD,
     });
-    await makeUser(USER.STAFF_A, "Staff A", { roleCode: "staff", branches: [BRANCH.B1] });
+    await makeUser(USER.STAFF_A, "Staff A", {
+      roleCode: "staff",
+      branches: [BRANCH.B1],
+      email: STAFF_A_EMAIL,
+      password: PASSWORD,
+    });
     await makeUser(USER.VET_A, "Dokter A", { roleCode: "vet", branches: [BRANCH.B1] });
     await makeUser(USER.STAFF_B, "Staff B", { roleCode: "staff", branches: [BRANCH.B2] });
     await makeUser(USER.VET_B, "Dokter B", { roleCode: "vet", branches: [BRANCH.B2] });

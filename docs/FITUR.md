@@ -41,6 +41,18 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | RLS isolasi cabang & medis (BR-001/002/003/004) | terverifikasi | 9 tes `.itest.ts` hijau |
 | Inventori & FEFO (BR-006/007) | terverifikasi | 5 tes `.itest.ts` hijau |
 | Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 9 tes `.itest.ts` hijau |
+| Autentikasi lokal (sesi + password) | terverifikasi | 14 tes `.itest.ts` hijau |
+
+## Autentikasi lokal (src/lib/auth, tanpa Supabase)
+
+| Fitur | Status | Kriteria selesai | Lokasi |
+|---|---|---|---|
+| Hash & verifikasi password (scrypt+salt) | terverifikasi | Hash tidak sama dengan password; verifikasi benar/salah | `src/lib/auth/service.ts` |
+| Buat & validasi sesi (token hash SHA-256) | terverifikasi | Token mentah tak disimpan; hanya hash di DB | `src/lib/auth/service.ts` |
+| Sesi dicabut / kedaluwarsa ditolak | terverifikasi | Logout & TTL negatif -> authenticate null | `src/lib/auth/service.ts` |
+| Login (email+password) & logout | terverifikasi | Benar -> sesi; salah -> null; logout cabut sesi | `src/lib/auth/service.ts` |
+| Rute API login/logout/me + middleware | terverifikasi | build hijau; /app redirect ke /login bila no sesi | `src/app/api/auth/`, `src/middleware.ts` |
+| Halaman login minimal | proses | UI ada; belum uji browser | `src/app/login/page.tsx` |
 
 ## Fitur inti v1 (BRIEF bagian 3)
 
