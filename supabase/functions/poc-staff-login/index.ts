@@ -16,12 +16,19 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
-  const contentLength = Number(req.headers.get("content-length") ?? "0");
-  if (contentLength > 2048) return json({ error: "Invalid request" }, 400);
+  let rawBody: string;
+  try {
+    rawBody = await req.text();
+  } catch {
+    return json({ error: "Invalid credentials" }, 401);
+  }
+  if (new TextEncoder().encode(rawBody).byteLength > 2048) {
+    return json({ error: "Invalid request" }, 400);
+  }
 
   let payload: unknown;
   try {
-    payload = await req.json();
+    payload = JSON.parse(rawBody);
   } catch {
     return json({ error: "Invalid credentials" }, 401);
   }
