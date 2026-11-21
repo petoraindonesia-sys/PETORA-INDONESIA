@@ -298,3 +298,12 @@
 - **Status merge:** UNMERGED — PR #9 masih terbuka dan belum masuk `main`.
 - **CI/build:** Tidak dijalankan; workflow web CI hanya terpicu oleh perubahan `apps/web/**` atau workflow-nya. Perubahan ini hanya pada konfigurasi Supabase dan progres.
 - **Blocker lanjutan P0.8:** Implementasi username + PIN 6 digit, session revocation, RBAC, RLS, dan migration tetap BLOCKED/PENDING sampai mekanisme autentikasi yang menghasilkan sesi Supabase valid dipilih dan diuji. ADR-0001 tetap menjadi kontrak sementara; tidak ada asumsi login baru.
+
+
+#### Catatan teknis lanjutan — batas keamanan PIN 6 digit
+- Dokumentasi Supabase Password Security terkini menyarankan panjang password minimal 8 karakter; kombinasi angka saja dengan panjang 8 diperkirakan memiliki sekitar 2^27 kemungkinan. Kontrak PETORA tetap PIN 6 digit dan tidak diubah oleh catatan ini.
+- Rate limit Auth bawaan Supabase untuk sign-in/password token terutama dibatasi berdasarkan IP, dengan default token endpoint 150 request per 5 menit; ini tidak membuktikan pembatasan per akun yang cukup untuk ruang PIN 6 digit.
+- Supabase mendukung Edge Functions untuk validasi/orkestrasi server-side dan menerapkan rate limit di fungsi, tetapi contoh resmi rate limiting menggunakan layanan eksternal seperti Redis. Untuk PETORA, opsi database-native (counter/lockout atomik di PostgreSQL) perlu dirancang dan diuji sebelum dipilih.
+- **Keputusan masih PENDING:** adapter server-side yang memetakan username ke identifier internal Supabase Auth, penggunaan PIN sebagai password Auth, serta ambang/throttle per akun dan IP. Tidak ada Edge Function, tabel kredensial, atau Auth user yang dibuat.
+- **Risiko:** PIN 6 digit memiliki ruang tebakan terbatas dan tidak setara dengan password panjang yang direkomendasikan. Implementasi harus memiliki proteksi brute-force per akun dan IP, respons generik, serta pengujian session/RLS; jangan deploy sebelum semua itu dibuktikan.
+- **Rujukan:** https://supabase.com/docs/guides/auth/password-security ; https://supabase.com/docs/guides/auth/rate-limits ; https://supabase.com/docs/guides/functions/examples/rate-limiting .
