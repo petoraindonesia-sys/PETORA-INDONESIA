@@ -304,3 +304,11 @@
 - **Test/CI:** Pemeriksaan status project, enumerasi tabel/migration, dan query SQL read-only berhasil melalui Supabase MCP. Tidak ada perubahan kode sehingga CI aplikasi tidak dijalankan.
 - **Commit awal progres:** `a89264e23f218c200916d9fb82766dd4bc6938a2`.
 - **Status merge:** UNMERGED; branch menunggu PR dan belum masuk main.
+
+
+#### Koreksi status PR P0.8.1
+
+- **PR:** #10 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/10
+- **Status:** OPEN, UNMERGED.
+- **Head saat PR dibuat:** `8f76f5c258f7d9fdc1b8cfe577035d1a58e14066`.
+- **Catatan:** PR hanya berisi dokumentasi hasil validasi project dan konektivitas Supabase. Belum digabung ke `main`; pemeriksaan merge/CI lanjutan belum dilakukan.
