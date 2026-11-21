@@ -205,3 +205,30 @@
 - Run #17 menguji commit aplikasi 0dea6c0391de95e80a7f95412c0d27f1f832a7bd, yaitu commit yang sama dengan kode frontend pada head PR saat ini; setelah itu hanya progres.md yang berubah.
 - Catatan sebelumnya yang menyebut run #17 masih berjalan adalah status sementara saat entri penyelesaian ditulis. Riwayat tersebut dipertahankan dan dikoreksi melalui catatan ini.
 - **Head PR terkini:** e468118833b2673efc0ce4ea231b6c4732dd56e2 (perubahan progres.md).
+
+
+## Koreksi status merge P0.5
+- **Status:** MERGED
+- **PR:** #3 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/3
+- **Merge commit:** c9e8ee30fa938281b2ceeb98eb0eb7329ad1d957
+- **Tanggal tindakan:** 2026-11-21
+- **Catatan:** PR #3 berhasil digabung ke main setelah CI run #4 SUCCESS. Catatan UNMERGED sebelumnya dipertahankan sebagai riwayat.
+
+## Koreksi status merge P0.6
+- **Status:** MERGED
+- **PR:** #4 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/4
+- **Merge commit:** 0f1ddac8a131c28a3de96b158e947e2f7a5bbfff
+- **Tanggal tindakan:** 2026-11-21
+- **Verifikasi setelah retarget ke main:** GitHub Actions run #19 pada head PR #4 SUCCESS.
+- **Catatan:** PR #4 berhasil digabung setelah PR #3 masuk main dan target PR #4 dipindahkan ke main. Catatan UNMERGED sebelumnya dipertahankan sebagai riwayat.
+
+## Koreksi dan rebase P0.7 — Dashboard Workspace
+- **Status:** IN_PROGRESS
+- **Branch kerja baru:** feat/p0-7-dashboard-shell-rebased
+- **Tujuan:** Mempertahankan implementasi P0.7 setelah squash merge P0.6 mengubah ancestry dan menimbulkan konflik pada PR #5.
+- **Scope:** Membuat ulang branch dari main terbaru, membawa hanya perubahan P0.7 yang relevan, mempertahankan komponen Apple Design yang kini sudah ada di main, dan menghindari duplikasi commit P0.6.
+- **Perubahan yang dibawa:** apps/web/app/dashboard/page.tsx, apps/web/components/app-shell.tsx, apps/web/app/page.tsx, progres.md.
+- **Pemeriksaan:** Branch dibuat dari main setelah merge P0.6. Komponen UI P0.6 tidak disalin ulang karena sudah tersedia di main. Perubahan CSS tidak diperlukan karena design tokens di main sudah memuat aturan yang dipakai shell.
+- **Bukti awal:** PR #5 lama mengalami merge conflict setelah base dipindahkan ke main; percobaan merge ditolak GitHub (HTTP 405: merge conflicts). Tidak ada perubahan yang dipaksa ke main.
+- **Status merge:** UNMERGED — branch rebased menunggu CI dan PR baru.
+- **Catatan verifikasi:** Hasil CI lama P0.7 run #23 SUCCESS pada commit aplikasi 15d7b8878efc3700715c9b5f37e53adc45f8385e. Rebase baru harus diuji ulang pada branch/PR baru sebelum VERIFIED untuk keadaan akhir.
