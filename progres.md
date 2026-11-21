@@ -205,3 +205,19 @@
 - Run #17 menguji commit aplikasi 0dea6c0391de95e80a7f95412c0d27f1f832a7bd, yaitu commit yang sama dengan kode frontend pada head PR saat ini; setelah itu hanya progres.md yang berubah.
 - Catatan sebelumnya yang menyebut run #17 masih berjalan adalah status sementara saat entri penyelesaian ditulis. Riwayat tersebut dipertahankan dan dikoreksi melalui catatan ini.
 - **Head PR terkini:** e468118833b2673efc0ce4ea231b6c4732dd56e2 (perubahan progres.md).
+
+
+## P0.7 — Fondasi Dashboard Operasional
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-7-dashboard-shell
+- **Basis:** PR #4 head 3d3ee69997583b2a5b6c10de451948a38112460d; PR #4 tetap OPEN/UNMERGED.
+- **Tujuan:** Menyiapkan kerangka workspace/dashboard PETORA yang responsif dan konsisten dengan Apple Design.
+- **Scope:** Membuat layout aplikasi bersama (sidebar, header, konten), navigasi in-page yang benar-benar berfungsi, dan halaman workspace awal dengan deskripsi area kerja PETORA. Tidak mengarang data operasional, status cabang, pengguna login, statistik, atau integrasi yang belum ada.
+- **Acceptance criteria:**
+  - Dashboard menggunakan komponen dan design tokens P0.6.
+  - Navigasi desktop dan mobile dapat digunakan dengan mouse dan keyboard; tombol menu mobile benar-benar membuka/menutup navigasi.
+  - Navigasi hanya mengarah ke route atau anchor yang tersedia.
+  - Tidak ada tombol aksi palsu, data contoh produksi, identitas pengguna palsu, atau selector cabang tanpa sumber data.
+  - Layout dapat digunakan pada viewport mobile, tablet, dan desktop.
+  - GitHub Actions install, lint, typecheck, dan build sukses.
+- **Batas verifikasi:** Belum tersedia autentikasi, data Supabase, atau browser E2E. Tahap ini membangun shell presentasi dan navigasi internal; bukan dashboard operasional terhubung data atau sistem autentikasi.
