@@ -198,3 +198,10 @@
 - **PR:** #4 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/4.
 - **Head commit:** 0dea6c0391de95e80a7f95412c0d27f1f832a7bd.
 - **Status merge:** UNMERGED — PR #4 masih terbuka dan belum masuk main.
+
+
+#### Koreksi hasil CI P0.6
+- **PR-triggered run #17:** https://github.com/petoraindonesia-sys/PETORA-INDONESIA/actions/runs/44846100096 — SUCCESS.
+- Run #17 menguji commit aplikasi 0dea6c0391de95e80a7f95412c0d27f1f832a7bd, yaitu commit yang sama dengan kode frontend pada head PR saat ini; setelah itu hanya progres.md yang berubah.
+- Catatan sebelumnya yang menyebut run #17 masih berjalan adalah status sementara saat entri penyelesaian ditulis. Riwayat tersebut dipertahankan dan dikoreksi melalui catatan ini.
+- **Head PR terkini:** e468118833b2673efc0ce4ea231b6c4732dd56e2 (perubahan progres.md).
