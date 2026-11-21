@@ -252,3 +252,13 @@
 - **Temuan Auth:** Dokumentasi resmi Supabase menyatakan password-based Auth memakai email atau nomor telepon, bukan username sebagai identifier langsung. Karena itu, implementasi username + PIN tidak boleh diasumsikan kompatibel dengan signInWithPassword tanpa rancangan perantara yang aman.
 - **Status:** BLOCKED untuk penerapan dan verifikasi database/Auth aktual sampai tersedia project Supabase yang dapat diakses dan desain alur username + PIN yang dapat diuji end-to-end. Pekerjaan dokumentasi/rancangan non-destruktif dapat dilanjutkan; tidak ada perubahan database cloud.
 - **Keamanan:** Tidak membuat akun dummy, tidak mengirim PIN melalui log, tidak memakai service-role di browser, dan tidak membuat custom JWT/session yang belum tervalidasi.
+
+
+### Catatan pekerjaan P0.8 — validasi autentikasi
+- **File dibuat:** docs/architecture/adr-0001-staff-authentication.md.
+- **Isi:** Kontrak login staf yang telah disetujui, batas dukungan Supabase Auth, persyaratan keamanan PIN, daftar keputusan implementasi yang masih pending, dan kriteria sebelum implementasi.
+- **Sumber teknis:** Dokumentasi resmi Supabase password-based Auth menyatakan identifier email atau nomor telepon; username bukan identifier bawaan untuk signInWithPassword.
+- **Pemeriksaan:** File ADR dibuat pada branch dan belum diterapkan ke project cloud.
+- **Tidak dilakukan:** Tidak membuat tabel credential/PIN, custom JWT, Edge Function login, policy RLS, akun uji, atau migration spekulatif.
+- **Blocker:** Supabase account yang terhubung tidak memiliki project yang terdaftar pada saat pemeriksaan; project ref dan environment untuk pengujian end-to-end belum tersedia. Mekanisme username + PIN juga belum dapat ditetapkan tanpa pembuktian sesi Supabase yang valid.
+- **Status tahap:** BLOCKED untuk schema/Auth implementation dan database verification. ADR dokumentasi IMPLEMENTED, keputusan autentikasi PENDING.
