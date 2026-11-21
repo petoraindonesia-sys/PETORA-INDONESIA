@@ -72,3 +72,31 @@ Format tiap entri: **Apa** (keputusan) — **Kenapa** — **Alternatif yang dito
 ## K-008 Bahasa dokumentasi: Bahasa Indonesia — Diterima
 
 - **Apa**: Dokumentasi & teks antarmuka Bahasa Indonesia; kode & identifier Inggris.
+
+## K-009 Local-first tanpa Supabase (aturan terkunci) — Diterima
+
+- **Apa**: Implementasi & pengujian **tidak** terhubung ke Supabase. Backend nyata
+  selama pengembangan adalah **Postgres lokal (Docker)**, diakses lewat modul data
+  `src/lib/db` yang:
+  - membuka koneksi `pg`, menetapkan `set_config('app.user_id', <uuid>, false)` dan
+    `set role authenticated` sebelum tiap operasi permintaan, sehingga **seluruh
+    kebijakan RLS dijalankan persis seperti di produksi**;
+  - memakai peran `postgres`/`service_role` (bypass RLS) hanya untuk seed & tugas admin.
+  - `auth.uid()` di-shim membaca `app.user_id` (lihat migrasi/harness).
+- **Mengapa**: Aturan pengguna: lanjutkan tanpa Supabase, uji lokal. Memisahkan lapisan
+  data dari penyedia Auth membuat logika bisnis & RLS identis antara lokal dan produksi;
+  saat Supabase disiapkan, hanya perlu mengganti adapter koneksi & Auth.
+- **Konsekuensi**: Autentikasi produksi (Supabase Auth) diganti sementara oleh aktor
+  eksplisit pada lapisan service (di UI nanti: dari sesi lokal). RLS tetap penjaga utama.
+- **Alternatif ditolak**: Menulis fitur langsung untuk Supabase SDK — tidak dapat diuji
+  tanpa akun; Melonggarkan RLS — melanggar keamanan wajib brief.
+
+## K-010 Pola data: koneksi + service per domain, diuji integrasi (Docker) — Diterima
+
+- **Apa**: Lapisan `src/lib/db` (koneksi & konteks RLS) + service per domain
+  (`src/lib/inventory`, `src/lib/billing`) berisi operasi tervalidasi. Tes integrasi
+  (Vitest) menyalakan Postgres Docker sekali (globalSetup), menerapkan migrasi, lalu
+  menjalankan skenario (termasuk konkurensi) terhadap DB nyata.
+- **Kenapa**: Membuktikan integritas (stok tidak minus walau dua transaksi bersamaan,
+  pembayaran tidak ganda, isolasi cabang) dengan bukti, bukan klaim.
+- **Alternatif ditolak**: Mock DB untuk stok/pembayaran — tidak membuktikan atomicitas.

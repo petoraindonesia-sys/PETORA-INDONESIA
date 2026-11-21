@@ -10,10 +10,13 @@ dan pet shop dalam satu sistem terpusat. Satu perusahaan dapat memiliki banyak c
 
 ## Status
 
-Fondasi v1 sedang dibangun. Lihat `docs/STATUS.md` untuk keadaan terkini dan
-`docs/FITUR.md` untuk daftar fitur. Gambaran produk ada di `docs/PRODUK.md`,
-aturan bisnis (BR-001..BR-021) di `docs/ATURAN-BISNIS.md`, keputusan teknis di
-`docs/KEPUTUSAN.md`.
+Fondasi + lapisan domain/service v1 sedang dibangun. Lihat `docs/STATUS.md` untuk
+keadaan terkini dan `docs/FITUR.md` untuk daftar fitur. Gambaran produk ada di
+`docs/PRODUK.md`, aturan bisnis (BR-001..BR-021) di `docs/ATURAN-BISNIS.md`, keputusan
+teknis di `docs/KEPUTUSAN.md`.
+
+Backend memakai **Postgres lokal (Docker)** selama pengembangan (tanpa Supabase —
+lihat `docs/KEPUTUSAN.md` K-009). Keamanan & integritas ditegakkan RLS di database.
 
 ## Prasyarat
 
@@ -33,9 +36,9 @@ pnpm dev          # aplikasi di http://localhost:3000
 ```bash
 pnpm lint         # ESLint
 pnpm typecheck    # TypeScript (tsc --noEmit)
-pnpm test         # Vitest (unit, logika domain)
+pnpm test         # Vitest (unit, logika domain) - tanpa Docker
 pnpm build        # build produksi Next.js
-pnpm test:db      # Tes RLS/DB terhadap Postgres lokal (Docker)
+pnpm test:db      # Tes integrasi RLS/DB terhadap Postgres lokal (Docker)
 ```
 
 Seluruh pemeriksaan harus hijau sebelum sebuah pekerjaan dianggap selesai
@@ -48,16 +51,23 @@ docs/                 # Ingatan proyek
 src/
   app/                # Next.js App Router
   components/         # Komponen UI PETORA
-  lib/domain/         # Logika bisnis murni (uang, pajak, pembulatan, kandang, FEFO)
+  lib/
+    domain/           # Logika bisnis murni (uang, pajak, pembulatan, kandang, FEFO, tagihan)
+    db/               # Lapisan data (pool + withActor yang menjalankan RLS)
+    inventory/        # Service inventori (terima stok, FEFO atomik, penyesuaian)
+    billing/          # Service kasir (buat tagihan, pembayaran idempoten, void)
   db/
-    migrations/       # Migrasi SQL (RLS, schema)
-    tests/            # Harness & tes RLS/DB
+    migrations/       # Migrasi SQL (schema + RLS) 0001, 0002
+    tests/            # globalSetup + fixture + tes integrasi `.itest.ts`
 tests/                # Tes unit (Vitest)
 ```
 
 ## Aturan bisnis yang sudah punya tes
 
-- BR-008 (uang bulat Rupiah), BR-012 (biaya kandang/24 jam), BR-020 (PPN),
-  BR-021 (pembulatan), BR-007 (FEFO): `src/lib/domain/*.test.ts`.
+- BR-007/008/009/012/020/021: `src/lib/domain/*.test.ts` (unit, 38 tes).
 - BR-001/002/003/004 (isolasi cabang, permission, rekam medis lintas cabang):
-  `pnpm test:db` (dibuktikan di level database).
+  `pnpm test:db` — `src/db/tests/rls.integration.itest.ts`.
+- BR-006/007 (stok atomik & FEFO, termasuk dua transaksi bersamaan):
+  `src/db/tests/inventory.integration.itest.ts`.
+- BR-009/010/011/018/020/021 (tagihan, pembayaran sebagian/lunas, anti bayar ganda, void):
+  `src/db/tests/billing.integration.itest.ts`.

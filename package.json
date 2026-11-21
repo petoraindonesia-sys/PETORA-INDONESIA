@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:db": "node src/db/tests/run.mjs",
+    "test:db": "vitest run --config vitest.integration.config.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
