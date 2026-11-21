@@ -271,3 +271,59 @@
 - **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
 - **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
 - **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
+
+
+## P0.8.2 — Proof of Concept Autentikasi Username + PIN
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-2-auth-username-pin-poc
+- **Tujuan:** Membuktikan secara terisolasi apakah alur username + PIN 6 digit dapat menghasilkan sesi Supabase Auth yang valid tanpa mengubah kontrak login PETORA.
+- **Scope:** Meninjau opsi Supabase Auth terbaru; merancang adapter server-side; menilai risiko brute force PIN; menyiapkan proof of concept dan pengujian negatif/positif pada lingkungan terisolasi; tidak mengaktifkan login produksi atau mengubah konfigurasi Auth project utama.
+- **Acceptance criteria:**
+  - Identitas staf dipetakan ke identitas Supabase Auth tanpa mengekspos identifier internal kepada browser.
+  - PIN hanya diproses pada server tepercaya dan tidak disimpan/log dalam plaintext.
+  - Rate limit atomik mencakup username dan sumber permintaan; respons gagal generik.
+  - Sesi yang dihasilkan diverifikasi melalui Supabase Auth dan dapat digunakan untuk RLS.
+  - Perubahan status akun/sesi dapat memblokir akses berikutnya sesuai rancangan.
+  - Pengujian membuktikan allow/deny, brute-force throttling, generic errors, dan tidak ada privilege dari user metadata.
+  - Tidak ada schema/Auth produksi yang diubah; test menggunakan environment terisolasi.
+  - Hasil, risiko, dan status dicatat di progres.md dengan bukti CI/commit.
+- **Batasan awal:** Project utama `tpqrcjsmijzbtgmertdo` masih kosong pada schema `public`, belum memiliki migration atau Edge Function. Project utama tidak akan dipakai untuk membuat akun uji atau mengubah konfigurasi Auth selama POC.
+- **Risiko yang wajib diuji:** PIN numerik 6 digit hanya memiliki 1.000.000 kombinasi; pembatasan online harus ditegakkan sebelum setiap percobaan Auth dan tidak boleh bergantung pada rate limit IP Supabase saja.
+- **Bukti awal:** Main commit `811173d683d373ea6ae0acc4590651d14e6ba3ad`; ADR-0001 masih PENDING.
+- **Status merge:** UNMERGED sampai PR benar-benar digabung.
+
+
+### Koreksi lingkungan POC — opsi gratis
+- **Keputusan Owner:** "gunakan gratis". POC tidak boleh menggunakan Supabase Development Branch yang berbiaya US$0,01344/jam.
+- **Lingkungan pengganti:** Project Supabase terpisah petora-auth-poc-free, ref yywiviksohbqxyultprz, region Singapore.
+- **Biaya yang dikonfirmasi:** US$0/bulan untuk pembuatan project; tidak ada Development Branch berbayar yang dibuat.
+- **Status project:** ACTIVE_HEALTHY, PostgreSQL 17.12. Project ini terpisah dari project utama petora-indonesia (tpqrcjsmijzbtgmertdo).
+- **Batasan:** Free project tetap dapat memiliki batas kuota/kapasitas. Tidak boleh mengaktifkan layanan/fitur berbayar atau menimbulkan biaya tambahan tanpa persetujuan Owner.
+- **Perubahan scope:** POC dijalankan langsung pada project gratis yang terisolasi, bukan Development Branch. Seluruh tabel, akun, fungsi, dan policy yang kelak dibuat di dalamnya hanya untuk POC dan tidak boleh disalin ke produksi tanpa review.
+- **Bukti:** Project dibuat dan statusnya diverifikasi melalui Supabase MCP pada 2026-11-21. Belum ada schema, migration, akun Auth, Edge Function, atau perubahan konfigurasi yang dibuat.
+- **Status tahap:** IN_PROGRESS; belum ada bukti sesi Auth, RLS, throttling, atau test runtime.
+
+
+### Implementasi awal POC username + PIN pada project gratis
+- **Project target:** petora-auth-poc-free (ref yywiviksohbqxyultprz); project utama tetap tidak disentuh.
+- **Perubahan database yang diterapkan:** migration 20261121011026 (pemetaan username ke Auth user + rate-limit tables/RPC), 20261121011108 (RLS probe), dan 20261121011150 (hardening secret/rate-limit reset). Riwayat migration pada project cocok dengan ketiga versi tersebut.
+- **Edge Function:** poc-staff-login aktif, versi 3, verify_jwt=false karena endpoint merupakan entry point login publik; function sendiri melakukan validasi request, rate-limit, lookup identity internal, dan Supabase Auth password sign-in. Secret key hanya dibaca dari environment server. Tidak ada PIN/token yang ditulis ke log atau repository.
+- **Rate limit:** HMAC hash untuk username dan sumber request; bucket username maksimum 4 percobaan yang diterima sebelum blokir pada percobaan ke-5; bucket sumber memblokir pada percobaan ke-20; window 15 menit. Login sukses hanya menghapus bucket username, bukan bucket sumber bersama.
+- **RLS probe:** tabel uji memakai policy auth.uid() = user_id. Pengujian SQL menunjukkan anon mendapat 0 baris, user A hanya mendapat row A, dan user B hanya mendapat row B. Claim UUID disimulasikan melalui Postgres untuk menguji policy; ini belum membuktikan sesi Auth nyata.
+- **Pengujian database aktual:** file supabase/tests/poc_staff_login_security.test.sql dieksekusi terhadap project gratis tanpa exception. Test mencakup hak execute RPC, rate-limit username, rate-limit sumber, reset bucket, dan isolasi RLS. Uji rate limit terpisah menghasilkan 4 allow/2 deny untuk bucket username dan 19 allow/1 deny pada ambang bucket sumber; request berikutnya ditolak. Data uji rate-limit dibersihkan.
+- **Security Advisor:** hanya mengembalikan 3 temuan INFO rls_enabled_no_policy untuk tabel private yang memang tidak memberi akses ke anon/authenticated; grants dibatasi ke service_role. Tidak ada temuan level ERROR/HIGH pada hasil yang diperoleh.
+- **Belum diverifikasi:** request HTTP POST ke Edge Function, provisioning user Auth uji, password PIN 6 digit pada konfigurasi Auth project, pembuatan sesi nyata, pemakaian sesi pada RLS dengan JWT sungguhan, generic response runtime, serta revocation/penonaktifan akun. Belum ada akun uji karena tool yang tersedia tidak menyediakan operasi Admin Auth create-user dan tidak ada kredensial yang akan diminta/dimasukkan ke repository.
+- **File repository:** tiga migration SQL di supabase/migrations/, supabase/functions/poc-staff-login/index.ts, dan supabase/tests/poc_staff_login_security.test.sql.
+- **Bukti deploy/database:** Edge Function ACTIVE versi 3; migrations 20261121011026, 20261121011108, 20261121011150 terdaftar; SQL test di atas berhasil dijalankan pada project ref yywiviksohbqxyultprz.
+- **Bukti Git:** branch feat/p0-8-2-auth-username-pin-poc, latest known commit ca69601003fae07bf0f1903bda2ce554eb41d4d7.
+- **Status tahap:** IN_PROGRESS (implementasi database/function tersedia; end-to-end Auth belum teruji). **Status merge:** UNMERGED; PR belum dibuat.
+
+
+### Koreksi bukti Git POC
+- PR draft #11 dibuat: https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/11
+- Head commit PR saat dibuat: 36660d85c3d160550446ab35416e8752b45a353e.
+- Base main: 245d9c0aa6eac08f5bf06c4955a2bf69e3b2bcd0.
+- Status PR: OPEN, DRAFT, UNMERGED. Belum ada CI result yang diverifikasi untuk PR ini.
+- Perubahan PR: 6 file (3 migration, 1 Edge Function, 1 SQL test, progres.md).
+- Tahap tetap IN_PROGRESS sampai sesi Auth nyata dan test end-to-end dijalankan.
