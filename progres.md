@@ -232,3 +232,33 @@
 - **Bukti awal:** PR #5 lama mengalami merge conflict setelah base dipindahkan ke main; percobaan merge ditolak GitHub (HTTP 405: merge conflicts). Tidak ada perubahan yang dipaksa ke main.
 - **Status merge:** UNMERGED — branch rebased menunggu CI dan PR baru.
 - **Catatan verifikasi:** Hasil CI lama P0.7 run #23 SUCCESS pada commit aplikasi 15d7b8878efc3700715c9b5f37e53adc45f8385e. Rebase baru harus diuji ulang pada branch/PR baru sebelum VERIFIED untuk keadaan akhir.
+
+
+## Koreksi status merge P0.7 — Dashboard Workspace
+- **Status merge:** MERGED
+- **PR pengganti:** #6 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/6
+- **Merge commit:** a6f708a8ea580bb241d0a798d562ee014a91a925
+- **Tanggal tindakan:** 2026-11-21
+- **PR lama:** #5 ditutup tanpa merge karena mengalami konflik setelah P0.6 di-squash merge.
+- **Status implementasi:** IMPLEMENTED dan MERGED. CI run #23 SUCCESS pada implementasi P0.7 sebelum rebase; belum tersedia hasil CI baru pada head rebase PR #6. Belum ada browser E2E atau pemeriksaan runtime drawer.
+
+## P0.8 — Fondasi Database dan Autentikasi Supabase
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-supabase-foundation
+- **Tujuan:** Menyiapkan fondasi database, identitas staf, sesi, RBAC, audit, dan isolasi multi-cabang menggunakan Supabase sebagai backend tunggal.
+- **Scope awal:** Audit konfigurasi dan instruksi Supabase yang ada; validasi dukungan Auth untuk kontrak username + PIN 6 digit; rancangan company/branch, user profile, role/permission, employee assignment, session revocation, dan RLS; siapkan migration serta database security tests setelah pola Auth dan environment dapat diverifikasi.
+- **Acceptance criteria:** Migration tersimpan dan berurutan; RLS default-deny; branch isolation diuji positif/negatif; role/permission tidak berasal dari payload browser; PIN tidak tersimpan plaintext; session revocation diuji; CI/database test sukses; tidak ada credential atau data sensitif di repository.
+- **Temuan awal:** supabase/config.toml hanya berisi project_id lokal. Supabase MCP account saat inspeksi mengembalikan daftar project kosong. Repository belum menunjukkan migration SQL atau database test pada konfigurasi yang diperiksa.
+- **Temuan Auth:** Dokumentasi resmi Supabase menyatakan password-based Auth memakai email atau nomor telepon, bukan username sebagai identifier langsung. Karena itu, implementasi username + PIN tidak boleh diasumsikan kompatibel dengan signInWithPassword tanpa rancangan perantara yang aman.
+- **Status:** BLOCKED untuk penerapan dan verifikasi database/Auth aktual sampai tersedia project Supabase yang dapat diakses dan desain alur username + PIN yang dapat diuji end-to-end. Pekerjaan dokumentasi/rancangan non-destruktif dapat dilanjutkan; tidak ada perubahan database cloud.
+- **Keamanan:** Tidak membuat akun dummy, tidak mengirim PIN melalui log, tidak memakai service-role di browser, dan tidak membuat custom JWT/session yang belum tervalidasi.
+
+
+### Catatan pekerjaan P0.8 — validasi autentikasi
+- **File dibuat:** docs/architecture/adr-0001-staff-authentication.md.
+- **Isi:** Kontrak login staf yang telah disetujui, batas dukungan Supabase Auth, persyaratan keamanan PIN, daftar keputusan implementasi yang masih pending, dan kriteria sebelum implementasi.
+- **Sumber teknis:** Dokumentasi resmi Supabase password-based Auth menyatakan identifier email atau nomor telepon; username bukan identifier bawaan untuk signInWithPassword.
+- **Pemeriksaan:** File ADR dibuat pada branch dan belum diterapkan ke project cloud.
+- **Tidak dilakukan:** Tidak membuat tabel credential/PIN, custom JWT, Edge Function login, policy RLS, akun uji, atau migration spekulatif.
+- **Blocker:** Supabase account yang terhubung tidak memiliki project yang terdaftar pada saat pemeriksaan; project ref dan environment untuk pengujian end-to-end belum tersedia. Mekanisme username + PIN juga belum dapat ditetapkan tanpa pembuktian sesi Supabase yang valid.
+- **Status tahap:** BLOCKED untuk schema/Auth implementation dan database verification. ADR dokumentasi IMPLEMENTED, keputusan autentikasi PENDING.
