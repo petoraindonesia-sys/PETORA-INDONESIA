@@ -41,7 +41,7 @@ Deno.serve(async (req: Request) => {
     username.length < 3 ||
     username.length > 64 ||
     !/^[a-zA-Z0-9._-]+$/.test(username) ||
-    !/^\\d{6}$/.test(pin)
+    !/^\d{6}$/.test(pin)
   ) return json({ error: "Invalid credentials" }, 401);
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
