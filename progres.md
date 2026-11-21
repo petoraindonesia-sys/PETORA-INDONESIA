@@ -151,3 +151,18 @@
   - Hasil workflow dibaca dari run aktual; status VERIFIED hanya jika seluruh job relevan sukses.
   - Tidak ada perubahan schema Supabase atau keputusan bisnis.
 - **Batasan:** Pekerjaan ini menggunakan GitHub Actions sebagai runtime build karena sesi tidak memiliki terminal repository lokal. Jika workflow gagal, perbaikan dicatat dan diuji ulang; kegagalan tidak boleh disembunyikan.
+
+
+### Catatan penyelesaian P0.5
+- **Status akhir:** VERIFIED
+- **File dibuat/diubah:** apps/web/package-lock.json, .github/workflows/web-ci.yml, README.md, progres.md.
+- **Lockfile:** package-lock.json dihasilkan oleh npm pada GitHub Actions, menggunakan lockfileVersion 3; manifest root di lockfile sesuai dengan apps/web/package.json.
+- **Commit lockfile:** fa4ccff5c74a9839b0f589a71615ed9a50824bd1
+- **Workflow:** PETORA Web CI, Node.js 22, npm cache berdasarkan apps/web/package-lock.json, permission minimum contents: read, menjalankan npm ci, ESLint, TypeScript typecheck, dan production build.
+- **Verifikasi CI:** Run #4 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/actions/runs/44845663991
+- **Hasil CI:** SUCCESS. Verify npm lockfile, npm ci, lint, typecheck, production build, dan cleanup seluruhnya selesai sukses.
+- **Commit konfigurasi CI final:** cf81de23a970404cc2ea0fcb4db24e174e4c59f7
+- **Commit awal workflow/bootstrap:** 5385ff5e2b1f843487a74551002ab324f9eab046. Lockfile kemudian dibuat sebagai commit bot terpisah dan workflow disederhanakan menjadi read-only.
+- **PR:** #3 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/3
+- **Status merge:** UNMERGED — PR #3 masih terbuka; belum masuk main.
+- **Batas verifikasi:** Yang diverifikasi adalah install, lint, typecheck, dan production build frontend. Belum ada pengujian browser/E2E, integrasi Supabase, atau deployment Vercel.
