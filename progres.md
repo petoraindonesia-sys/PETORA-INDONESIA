@@ -166,3 +166,20 @@
 - **PR:** #3 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/3
 - **Status merge:** UNMERGED — PR #3 masih terbuka; belum masuk main.
 - **Batas verifikasi:** Yang diverifikasi adalah install, lint, typecheck, dan production build frontend. Belum ada pengujian browser/E2E, integrasi Supabase, atau deployment Vercel.
+
+
+## P0.6 — Fondasi Design System Apple
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-6-apple-design-system
+- **Tujuan:** Mengubah token visual dasar menjadi fondasi Design System Apple yang reusable dan aksesibel untuk seluruh area frontend PETORA.
+- **Scope:** Audit implementasi frontend yang sudah ada; menyempurnakan design tokens; membuat komponen dasar Button, Input, Select, Card, Badge, dan komponen status; menerapkan komponen pada halaman awal tanpa menambahkan data operasional palsu atau navigasi/aksi semu; menambahkan state interaksi dan responsive/accessibility styling.
+- **Acceptance criteria:**
+  - Token warna, tipografi, spacing, radius, border, elevation, dan focus konsisten serta terpusat.
+  - Komponen dasar reusable memiliki API TypeScript yang jelas dan state relevan (default, hover, focus, disabled, invalid/loading bila sesuai).
+  - Form controls memiliki label dan pesan/helper text yang aksesibel.
+  - Layout mendukung mobile, tablet, dan desktop serta prefers-reduced-motion.
+  - Tidak ada dependensi UI tambahan tanpa kebutuhan terukur.
+  - Halaman awal menggunakan sistem visual yang sama dan tidak menampilkan data operasional palsu atau tombol tanpa aksi.
+  - GitHub Actions berhasil menjalankan install, lint, typecheck, dan production build.
+- **Batas verifikasi:** Belum ada test runner unit/component atau browser E2E pada package saat tahap dimulai. CI build/lint/typecheck tidak membuktikan interaksi browser atau aksesibilitas secara menyeluruh; keterbatasan ini harus dicatat.
