@@ -19,6 +19,13 @@ export default async function AppHome() {
       </p>
       <nav className="mt-6 flex gap-2">
         <a
+          href="/app/visits"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Kunjungan
+        </a>
+        <a
           href="/app/cashier"
           className="rounded-xl border px-4 py-2 text-sm"
           style={{ borderColor: "rgba(0,0,0,0.12)" }}
@@ -32,6 +39,15 @@ export default async function AppHome() {
         >
           Pelanggan
         </a>
+        {session.user.isOwner ? (
+          <a
+            href="/app/medical"
+            className="rounded-xl border px-4 py-2 text-sm"
+            style={{ borderColor: "rgba(0,0,0,0.12)" }}
+          >
+            Rekam medis
+          </a>
+        ) : null}
         {session.user.isOwner ? (
           <a
             href="/app/branches"

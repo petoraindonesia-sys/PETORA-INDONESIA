@@ -41,6 +41,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 |---|---|---|
 | RLS isolasi cabang & medis (BR-001/002/003/004) | terverifikasi | 9 tes `.itest.ts` hijau |
 | Pelanggan & hewan (BR-003) | terverifikasi | 11 tes `.itest.ts` hijau |
+| Kunjungan & rekam medis (BR-001/003/004) | terverifikasi | 13 tes `.itest.ts` hijau |
 | Inventori & FEFO (BR-006/007) | terverifikasi | 5 tes `.itest.ts` hijau |
 | Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 13 tes `.itest.ts` hijau |
 | Autentikasi lokal (sesi + password) | terverifikasi | 14 tes `.itest.ts` hijau |
@@ -66,6 +67,18 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | API /api/pets (GET/POST) | terverifikasi | filter customerId; validasi input | `src/app/api/pets/` |
 | Halaman /app/customers | proses | Daftar + cari + form pelanggan + kelola hewan; belum uji browser | `src/app/app/customers/page.tsx` |
 
+## Kunjungan & rekam medis (src/lib/visits, src/lib/medical, UI)
+
+| Fitur | Status | Kriteria selesai | Lokasi |
+|---|---|---|---|
+| Service kunjungan (list by branch/create/get) | terverifikasi | Terisolasi per cabang (RLS); nomor antrean harian; validasi kepemilikan hewan | `src/lib/visits/service.ts` |
+| Transisi status kunjungan (BR-001 alur) | terverifikasi | terdaftar→menunggu→diperiksa→selesai; transisi ilegal ditolak | `src/lib/visits/service.ts` |
+| Service rekam medis (draft/final) (BR-003/004) | terverifikasi | Draft milik sendiri; final terkunci RLS; baca lintas cabang medical.read | `src/lib/medical/service.ts` |
+| API /api/visits (GET/POST) + /[id]/status (PATCH) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/visits/` |
+| API /api/medical-records (GET/POST) + /[id] (GET/PATCH/POST) | terverifikasi | requireActor + RLS; finalisasi via POST | `src/app/api/medical-records/` |
+| Halaman /app/visits | proses | Daftar kunjungan cabang + buat kunjungan + ubah status; belum uji browser | `src/app/app/visits/page.tsx` |
+| Halaman /app/medical (Dokter) | proses | Rekam medis per pasien lintas cabang; draft→edit→final; belum uji browser | `src/app/app/medical/page.tsx` |
+
 ## Autentikasi lokal (src/lib/auth, tanpa Supabase)
 
 | Fitur | Status | Kriteria selesai | Lokasi |
@@ -85,8 +98,8 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Autentikasi & akses | Wajib v1 | rencana | Menu/data per role; ditolak di DB |
 | Pelanggan | Wajib v1 | sebagian | Terpusat lintas cabang; CRUD teruji; UI /app/customers dibuat, belum uji browser |
 | Pasien hewan | Wajib v1 | sebagian | Satu pemilik banyak hewan; CRUD teruji; UI /app/customers dibuat, belum uji browser |
-| Pelayanan klinik | Wajib v1 | rencana | Daftar→periksa→tindakan→resep→tagihan otomatis |
-| Rekam medis | Wajib v1 | sebagian | RLS & aturan final/addendum teruji (DB); UI belum |
+| Pelayanan klinik | Wajib v1 | sebagian | Daftar→periksa→tindakan teruji; UI /app/visits dibuat, belum uji browser |
+| Rekam medis | Wajib v1 | sebagian | RLS final/addendum teruji; UI /app/medical dibuat, belum uji browser |
 | Vaksinasi | Wajib v1 | rencana | Catatan + jadwal booster + pengingat |
 | Rawat inap | Wajib v1 | rencana | Check-in/out; biaya kandang otomatis; portal lihat |
 | Pet shop | Wajib v1 | sebagian | Buat tagihan + kurangi stok teruji; katalog UI belum |
