@@ -59,9 +59,7 @@ Deno.serve(async (req: Request) => {
   });
 
   const normalized = username.toLowerCase();
-  const source = req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-real-ip") ??
-    "unknown";
+  const source = req.headers.get("cf-connecting-ip") ?? "unknown";
 
   const { data: allowed, error: rateError } = await admin.rpc(
     "poc_consume_staff_login_attempt",
