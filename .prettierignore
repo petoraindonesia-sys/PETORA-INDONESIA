@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+build
+pnpm-lock.yaml
+
+# File yang disediakan pengguna & dokumentasi: jangan diformat otomatis
+AGENTS.md
+BRIEF.md
+docs/
+README.md
