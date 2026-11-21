@@ -271,3 +271,24 @@
 - **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
 - **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
 - **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
+
+
+## P0.8.2 — Proof of Concept Autentikasi Username + PIN
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-2-auth-username-pin-poc
+- **Tujuan:** Membuktikan secara terisolasi apakah alur username + PIN 6 digit dapat menghasilkan sesi Supabase Auth yang valid tanpa mengubah kontrak login PETORA.
+- **Scope:** Meninjau opsi Supabase Auth terbaru; merancang adapter server-side; menilai risiko brute force PIN; menyiapkan proof of concept dan pengujian negatif/positif pada lingkungan terisolasi; tidak mengaktifkan login produksi atau mengubah konfigurasi Auth project utama.
+- **Acceptance criteria:**
+  - Identitas staf dipetakan ke identitas Supabase Auth tanpa mengekspos identifier internal kepada browser.
+  - PIN hanya diproses pada server tepercaya dan tidak disimpan/log dalam plaintext.
+  - Rate limit atomik mencakup username dan sumber permintaan; respons gagal generik.
+  - Sesi yang dihasilkan diverifikasi melalui Supabase Auth dan dapat digunakan untuk RLS.
+  - Perubahan status akun/sesi dapat memblokir akses berikutnya sesuai rancangan.
+  - Pengujian membuktikan allow/deny, brute-force throttling, generic errors, dan tidak ada privilege dari user metadata.
+  - Tidak ada schema/Auth produksi yang diubah; test menggunakan environment terisolasi.
+  - Hasil, risiko, dan status dicatat di progres.md dengan bukti CI/commit.
+- **Batasan awal:** Project utama `tpqrcjsmijzbtgmertdo` masih kosong pada schema `public`, belum memiliki migration atau Edge Function. Project utama tidak akan dipakai untuk membuat akun uji atau mengubah konfigurasi Auth selama POC.
+- **Risiko yang wajib diuji:** PIN numerik 6 digit hanya memiliki 1.000.000 kombinasi; pembatasan online harus ditegakkan sebelum setiap percobaan Auth dan tidak boleh bergantung pada rate limit IP Supabase saja.
+- **Bukti awal:** Main commit `811173d683d373ea6ae0acc4590651d14e6ba3ad`; ADR-0001 masih PENDING.
+- **Status merge:** UNMERGED sampai PR benar-benar digabung.
