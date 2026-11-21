@@ -129,3 +129,25 @@
 - **Status PR:** OPEN, UNMERGED
 - **Head commit:** 394725c9e6533bb06e5e117debccdec17d26c758
 - **Catatan koreksi:** Baris sebelumnya menyebut PR belum dibuat karena ditulis sebelum PR dibuka. PR #2 kini sudah dibuat; belum digabung ke main.
+
+
+## Koreksi status merge P0.4
+- **Status:** MERGED
+- **PR:** #2 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/2
+- **Merge commit:** 025e304fba97fb2f9b8b46efd75a38721b5d9b5f
+- **Tanggal tindakan:** 2026-11-21
+- **Catatan koreksi:** Catatan P0.4 sebelumnya menyebut PR masih terbuka. PR #2 telah digabung ke main atas instruksi Owner.
+
+## P0.5 — Dependency Lockfile dan CI Build
+- **Status:** IN_PROGRESS
+- **Branch:** ci/p0-5-lockfile-github-actions
+- **Tujuan:** Membuat instalasi dependency reproducible dan memverifikasi kualitas dasar aplikasi web secara otomatis pada GitHub Actions.
+- **Scope:** Menghasilkan package-lock.json dari apps/web/package.json; menambahkan workflow GitHub Actions untuk Node.js, npm ci, ESLint, TypeScript check, dan production build; memperbarui README dan progres.md.
+- **Acceptance criteria:**
+  - package-lock.json di-commit dan konsisten dengan package.json.
+  - GitHub Actions menjalankan npm ci, lint, typecheck, dan build.
+  - Workflow memakai versi Node yang didukung Next.js dan tidak memerlukan secrets.
+  - CI berjalan pada pull request ke main dan push ke main.
+  - Hasil workflow dibaca dari run aktual; status VERIFIED hanya jika seluruh job relevan sukses.
+  - Tidak ada perubahan schema Supabase atau keputusan bisnis.
+- **Batasan:** Pekerjaan ini menggunakan GitHub Actions sebagai runtime build karena sesi tidak memiliki terminal repository lokal. Jika workflow gagal, perbaikan dicatat dan diuji ulang; kegagalan tidak boleh disembunyikan.
