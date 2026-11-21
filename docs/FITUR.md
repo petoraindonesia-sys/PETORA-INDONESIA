@@ -54,9 +54,9 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 |---|---|---|---|
 | Service cabang (list/get/create/update/deactivate) | terverifikasi | Owner CRUD; Staff ditolak RLS; zona waktu divalidasi | `src/lib/branches/service.ts` |
 | API /api/branches (GET/POST) + /[id] (PATCH/DELETE) | terverifikasi | build hijau; requireActor + RLS | `src/app/api/branches/` |
-| Halaman /app/branches (Owner) | proses | UI daftar + form tambah; belum uji browser | `src/app/app/branches/page.tsx` |
+| Halaman /app/branches (Owner) | terverifikasi | UI daftar + form tambah + zona waktu; **Owner CRUD berjalan, Staff ditolak RLS** | `src/app/app/branches/page.tsx` |
 | API /api/invoices (GET/POST) + /[id]/payments (POST) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/invoices/` |
-| Halaman /app/cashier | proses | Buat tagihan (item/diskon/PPN/pembulatan) + catat pembayaran; belum uji browser | `src/app/app/cashier/page.tsx` |
+| Halaman /app/cashier | terverifikasi | Buat tagihan (item/diskon/PPN/pembulatan) + catat pembayaran; **Staff A buat tagihan & bayar tunai + kembalian, idempoten** | `src/app/app/cashier/page.tsx` |
 
 ## Pelanggan & hewan (src/lib/customer, src/lib/pet, UI)
 
@@ -66,7 +66,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Service hewan (list by customer/get/create/update) | terverifikasi | Nama & species wajib; pemilik harus terlihat; 11 tes hijau | `src/lib/pet/service.ts` |
 | API /api/customers (GET/POST) + /[id] (GET/PATCH) | terverifikasi | requireActor + RLS; pencarian nama/telepon | `src/app/api/customers/` |
 | API /api/pets (GET/POST) | terverifikasi | filter customerId; validasi input | `src/app/api/pets/` |
-| Halaman /app/customers | proses | Daftar + cari + form pelanggan + kelola hewan; belum uji browser | `src/app/app/customers/page.tsx` |
+| Halaman /app/customers | terverifikasi | Daftar + cari + form pelanggan + kelola hewan per pelanggan; **Staff A CRUD pelanggan/hewan lintas cabang** | `src/app/app/customers/page.tsx` |
 
 ## Kunjungan & rekam medis (src/lib/visits, src/lib/medical, UI)
 
@@ -77,16 +77,19 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Service rekam medis (draft/final) (BR-003/004) | terverifikasi | Draft milik sendiri; final terkunci RLS; baca lintas cabang medical.read | `src/lib/medical/service.ts` |
 | API /api/visits (GET/POST) + /[id]/status (PATCH) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/visits/` |
 | API /api/medical-records (GET/POST) + /[id] (GET/PATCH/POST) | terverifikasi | requireActor + RLS; finalisasi via POST | `src/app/api/medical-records/` |
-| Halaman /app/visits | proses | Daftar kunjungan cabang + buat kunjungan + ubah status; belum uji browser | `src/app/app/visits/page.tsx` |
-| Halaman /app/medical (Dokter) | proses | Rekam medis per pasien lintas cabang; draft→edit→final; belum uji browser | `src/app/app/medical/page.tsx` |
+| Halaman /app/visits | terverifikasi | Daftar kunjungan cabang + buat kunjungan + ubah status; **Staff A buat kunjungan, antrean harian, transisi status terdaftar→menunggu→diperiksa→selesai** | `src/app/app/visits/page.tsx` |
+| Halaman /app/medical (Dokter) | terverifikasi | Rekam medis per pasien lintas cabang; draft→edit→final; **Dokter A buat draft, edit, finalisasi; Staff A ditolak medical.write** | `src/app/app/medical/page.tsx` |
 
-## Ringkasan operasional (src/lib/dashboard, UI)
+## Ringkasan operasional (src/lib/dashboard, src/lib/reports, UI)
 
 | Fitur | Status | Kriteria selesai | Lokasi |
 |---|---|---|---|
 | Service dashboard (ringkasan per cabang) | terverifikasi | Kunjungan/tagihan hari ini (zona per cabang) + piutang; RLS batasi cabang | `src/lib/dashboard/service.ts` |
 | API /api/dashboard (GET) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/dashboard/route.ts` |
-| Halaman /app (dashboard) | proses | Kartu total + rincian per cabang + akses modul; belum uji browser | `src/app/app/page.tsx` |
+| Halaman /app (dashboard) | terverifikasi | Kartu total + rincian per cabang + akses modul; **teruji browser** | `src/app/app/page.tsx` |
+| Service laporan periode (BR-016) | terverifikasi | Agregasi penjualan & kunjungan per hari lokal per cabang, zona waktu WIB/WITA/WIT | `src/lib/reports/service.ts` |
+| API /api/reports (GET) | terverifikasi | type=sales|visits, filter from/to/branchId, RLS | `src/app/api/reports/route.ts` |
+| Halaman /app/reports | terverifikasi | Filter jenis/rentang/cabang; tabel + chart; **teruji browser** | `src/app/app/reports/page.tsx` |
 
 ## Autentikasi lokal (src/lib/auth, tanpa Supabase)
 
@@ -109,16 +112,16 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Pasien hewan | Wajib v1 | sebagian | Satu pemilik banyak hewan; CRUD teruji; UI /app/customers dibuat, belum uji browser |
 | Pelayanan klinik | Wajib v1 | sebagian | Daftar→periksa→tindakan teruji; UI /app/visits dibuat, belum uji browser |
 | Rekam medis | Wajib v1 | sebagian | RLS final/addendum teruji; UI /app/medical dibuat, belum uji browser |
-| Vaksinasi | Wajib v1 | rencana | Catatan + jadwal booster + pengingat |
-| Rawat inap | Wajib v1 | rencana | Check-in/out; biaya kandang otomatis; portal lihat |
+| Vaksinasi | Wajib v1 | terverifikasi | Catatan + jadwal booster (BR-013); UI /app/vaccination **teruji browser** |
+| Rawat inap | Wajib v1 | terverifikasi | Check-in/out; biaya kandang per 24 jam (BR-012); UI /app/boarding **teruji browser** |
 | Pet shop | Wajib v1 | sebagian | Buat tagihan + kurangi stok teruji; katalog UI belum |
-| Inventori | Wajib v1 | sebagian | Stok per cabang, batch, FEFO, mutasi teruji; UI belum |
-| Transfer stok antar cabang | Wajib v1 | rencana | draft→kirim→terima; selisih ditinjau |
+| Inventori | Wajib v1 | terverifikasi | Stok per cabang, batch, FEFO, mutasi teruji; UI /app/inventory **teruji browser** |
+| Transfer stok antar cabang | Wajib v1 | terverifikasi | draft→kirim→terima (BR-017); FEFO asal, batch terbawa, selisih catat; UI /app/transfer **teruji browser** |
 | Pengadaan | Wajib v1 | sebagian | Terima stok (pembuatan batch) teruji; PO/batch UI belum |
 | Kasir & transaksi | Wajib v1 | sebagian | Tagihan terpadu + diskon/PPN/pembulatan teruji; UI /app/cashier dibuat, belum uji browser |
 | Pembayaran manual | Wajib v1 | sebagian | Tunai/transfer/QRIS/kartu + sebagian + anti-ganda teruji; UI /app/cashier dibuat, belum uji browser |
-| Laporan operasional | Wajib v1 | sebagian | Ringkasan harian per cabang (dashboard) teruji; laporan periode/zona belum |
-| Pet Owner Portal | Wajib v1 | rencana | Hanya baca; hanya data sendiri |
+| Laporan operasional | Wajib v1 | terverifikasi | Ringkasan harian per cabang (dashboard) + laporan periode per rentang tanggal & zona waktu; UI /app/reports **teruji browser** |
+| Pet Owner Portal | Wajib v1 | terverifikasi | Hanya baca; hanya data sendiri; login + dashboard hewan/medis/tagihan **teruji browser** |
 
 ## Nanti (v2+)
 

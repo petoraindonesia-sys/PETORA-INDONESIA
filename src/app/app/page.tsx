@@ -114,6 +114,41 @@ export default function AppHome() {
         >
           Cabang
         </a>
+        <a
+          href="/app/reports"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Laporan
+        </a>
+        <a
+          href="/app/inventory"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Inventori
+        </a>
+        <a
+          href="/app/vaccination"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Vaksinasi
+        </a>
+        <a
+          href="/app/boarding"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Rawat Inap
+        </a>
+        <a
+          href="/app/transfer"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Transfer Stok
+        </a>
       </nav>
 
       {error ? (
