@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const navigation = [
   { href: "#overview", label: "Ringkasan", section: "Workspace", icon: "grid" },
@@ -62,6 +62,21 @@ function NavigationContent({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppShell({ children, title }: { children: ReactNode; title: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    closeButtonRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      menuButtonRef.current?.focus();
+    };
+  }, [menuOpen]);
 
   return (
     <div className="min-h-screen bg-canvas text-primary">
@@ -87,7 +102,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
           >
             <div className="flex items-center justify-between">
               <Brand />
-              <button type="button" onClick={() => setMenuOpen(false)} aria-label="Tutup navigasi" className="flex size-10 items-center justify-center rounded-xl text-secondary hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-accent">
+              <button type="button" onClick={() => setMenuOpen(false)} aria-label="Tutup navigasi" ref={closeButtonRef} className="flex size-10 items-center justify-center rounded-xl text-secondary hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-accent">
                 <svg viewBox="0 0 20 20" fill="none" className="size-5"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
               </button>
             </div>
@@ -100,11 +115,11 @@ export function AppShell({ children, title }: { children: ReactNode; title: stri
         <header className="sticky top-0 z-20 flex h-[4.25rem] items-center justify-between border-b border-border bg-surface/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex min-w-0 items-center gap-3">
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setMenuOpen(true)}
               aria-label="Buka navigasi"
               aria-expanded={menuOpen}
-              aria-controls="mobile-workspace-navigation"
               className="flex size-10 shrink-0 items-center justify-center rounded-xl text-secondary hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-accent lg:hidden"
             >
               <svg viewBox="0 0 20 20" fill="none" className="size-5"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
