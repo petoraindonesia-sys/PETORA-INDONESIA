@@ -25,6 +25,13 @@ export default async function AppHome() {
         >
           Kasir
         </a>
+        <a
+          href="/app/customers"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Pelanggan
+        </a>
         {session.user.isOwner ? (
           <a
             href="/app/branches"

@@ -7,17 +7,17 @@ terverifikasi. Produk: aplikasi web operasional klinik hewan + pet shop, satu
 perusahaan banyak cabang, backend Postgres (local-first, tanpa Supabase — K-009), UI
 bergaya Apple, Bahasa Indonesia. Fondasi kode, modul domain murni, skema DB + RLS,
 lapisan data (withActor), service inventori & billing, service autentikasi lokal, dan
-service cabang sudah dibuat & **terverifikasi** (38 tes unit + 53 tes integrasi hijau;
-build/lint/typecheck hijau). UI masih minimal (login, /app, cabang, kasir).
+service cabang sudah dibuat & **terverifikasi** (38 tes unit + 64 tes integrasi hijau;
+build/lint/typecheck hijau). UI masih minimal (login, /app, cabang, kasir, pelanggan).
 
 ## Sedang dikerjakan
 
-- **Tugas**: UI Kasir (buat tagihan + pembayaran) + service daftar/detail tagihan + API + tes. Status: **selesai & terverifikasi**.
+- **Tugas**: UI Pelanggan & Hewan + service + API + tes. Status: **selesai & terverifikasi**.
 - **Branch**: `main`.
-- **Titik berhenti**: Kasir hijau (service/API/tes + build). UI rekam medis/pelanggan belum.
+- **Titik berhenti**: Pelanggan hijau (service/API/tes + build). UI rekam medis belum.
 - **Langkah berikutnya konkret**:
-  1. UI Rekam medis (Dokter) & Pelanggan/Pasien.
-  2. Uji browser alur kasir (login → buat tagihan → bayar) sebagai Staff A.
+  1. UI Rekam medis (Dokter): kunjungan → entri draft → final (BR-003/004/005).
+  2. Uji browser alur inti (login → pelanggan/hewan → kasir) sebagai Staff A.
   3. Integrasi Supabase (ganti `DATABASE_URL`) & deploy — butuh akun (di luar kendali).
 
 ## Tumpukan jeda
@@ -41,9 +41,13 @@ _Kosong._
 7. API /api/invoices (GET/POST) + /[id] (GET) + /[id]/payments (POST). (terverifikasi)
 8. Halaman /app/cashier: buat tagihan (item/diskon/PPN/pembulatan) + catat pembayaran. (proses — belum uji browser)
 9. 4 tes integrasi listInvoices/getInvoice (RLS batasi cabang, filter branchId, detail benar). (terverifikasi)
+10. Service pelanggan (list/get/create/update) + hewan (list by customer/get/create/update). (terverifikasi)
+11. API /api/customers (GET/POST, /[id] GET/PATCH) + /api/pets (GET/POST) dengan requireActor. (terverifikasi)
+12. Halaman /app/customers: daftar + cari + form pelanggan + kelola hewan per pelanggan. (proses — belum uji browser)
+13. 11 tes integrasi pelanggan/hewan (CRUD, terpusat lintas cabang, validasi nama/species/pemilik). (terverifikasi)
 
 ## Langkah berikutnya
 
-1. UI Rekam medis + Pelanggan & hewan.
-2. Uji browser alur kasir (login → buat tagihan → bayar) sebagai Staff A.
+1. UI Rekam medis (Dokter): kunjungan → entri draft → final (BR-003/004/005).
+2. Uji browser alur inti (login → pelanggan/hewan → kasir) sebagai Staff A.
 3. Siapkan Supabase & deploy (Vercel) — perlu pengguna (AGENTS.md §12).

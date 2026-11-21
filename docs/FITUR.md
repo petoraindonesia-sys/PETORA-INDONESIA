@@ -40,6 +40,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Cakupan | Status | Bukti |
 |---|---|---|
 | RLS isolasi cabang & medis (BR-001/002/003/004) | terverifikasi | 9 tes `.itest.ts` hijau |
+| Pelanggan & hewan (BR-003) | terverifikasi | 11 tes `.itest.ts` hijau |
 | Inventori & FEFO (BR-006/007) | terverifikasi | 5 tes `.itest.ts` hijau |
 | Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 13 tes `.itest.ts` hijau |
 | Autentikasi lokal (sesi + password) | terverifikasi | 14 tes `.itest.ts` hijau |
@@ -54,6 +55,16 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Halaman /app/branches (Owner) | proses | UI daftar + form tambah; belum uji browser | `src/app/app/branches/page.tsx` |
 | API /api/invoices (GET/POST) + /[id]/payments (POST) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/invoices/` |
 | Halaman /app/cashier | proses | Buat tagihan (item/diskon/PPN/pembulatan) + catat pembayaran; belum uji browser | `src/app/app/cashier/page.tsx` |
+
+## Pelanggan & hewan (src/lib/customer, src/lib/pet, UI)
+
+| Fitur | Status | Kriteria selesai | Lokasi |
+|---|---|---|---|
+| Service pelanggan (list/get/create/update) | terverifikasi | Nama wajib; data terpusat lintas cabang (RLS is_staff) | `src/lib/customer/service.ts` |
+| Service hewan (list by customer/get/create/update) | terverifikasi | Nama & species wajib; pemilik harus terlihat; 11 tes hijau | `src/lib/pet/service.ts` |
+| API /api/customers (GET/POST) + /[id] (GET/PATCH) | terverifikasi | requireActor + RLS; pencarian nama/telepon | `src/app/api/customers/` |
+| API /api/pets (GET/POST) | terverifikasi | filter customerId; validasi input | `src/app/api/pets/` |
+| Halaman /app/customers | proses | Daftar + cari + form pelanggan + kelola hewan; belum uji browser | `src/app/app/customers/page.tsx` |
 
 ## Autentikasi lokal (src/lib/auth, tanpa Supabase)
 
@@ -72,8 +83,8 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 |---|---|---|---|
 | Organisasi & cabang | Wajib v1 | rencana | Tambah cabang via pengaturan; isolasi data cabang |
 | Autentikasi & akses | Wajib v1 | rencana | Menu/data per role; ditolak di DB |
-| Pelanggan | Wajib v1 | rencana | Terpusat lintas cabang; riwayat kunjungan |
-| Pasien hewan | Wajib v1 | rencana | Satu pemilik banyak hewan |
+| Pelanggan | Wajib v1 | sebagian | Terpusat lintas cabang; CRUD teruji; UI /app/customers dibuat, belum uji browser |
+| Pasien hewan | Wajib v1 | sebagian | Satu pemilik banyak hewan; CRUD teruji; UI /app/customers dibuat, belum uji browser |
 | Pelayanan klinik | Wajib v1 | rencana | Daftar→periksa→tindakan→resep→tagihan otomatis |
 | Rekam medis | Wajib v1 | sebagian | RLS & aturan final/addendum teruji (DB); UI belum |
 | Vaksinasi | Wajib v1 | rencana | Catatan + jadwal booster + pengingat |
