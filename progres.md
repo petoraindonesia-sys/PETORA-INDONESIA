@@ -107,3 +107,18 @@
   - Tidak ada secret, credential, atau keputusan bisnis baru.
   - File dibaca kembali; keterbatasan test/build akibat tidak tersedianya runtime lokal dicatat apa adanya.
 - **Batasan verifikasi:** Akses saat ini hanya melalui GitHub connector; tidak tersedia terminal repository untuk memasang dependency atau menjalankan lint/typecheck/build/Supabase CLI. Status tidak boleh dinaikkan menjadi VERIFIED tanpa CI/test yang berhasil.
+
+
+### Catatan penyelesaian P0.4
+- **Status akhir:** IMPLEMENTED
+- **File dibuat:** README.md, .gitignore, apps/web/package.json, apps/web/tsconfig.json, apps/web/next.config.ts, apps/web/postcss.config.mjs, apps/web/eslint.config.mjs, apps/web/next-env.d.ts, apps/web/app/layout.tsx, apps/web/app/page.tsx, apps/web/app/globals.css, supabase/config.toml; progres.md diperbarui.
+- **Implementasi frontend:** Scaffold Next.js App Router + TypeScript + Tailwind CSS v4; metadata Bahasa Indonesia; halaman awal informatif tanpa data operasional palsu atau tombol/navigasi yang belum berfungsi; token Apple Design dasar terpusat.
+- **Implementasi Supabase:** Konfigurasi CLI lokal minimal. Belum ada schema bisnis, migration, policy, Auth, project ref, atau perubahan project cloud.
+- **Dependency yang ditetapkan:** Next.js 16.4.6, React 19.3.1, Tailwind CSS 4.3.5; versi langsung dipatok di package.json.
+- **Pemeriksaan repository:** Seluruh file yang dibuat berhasil dibaca kembali dari branch. JSON package.json dan tsconfig.json dapat diperiksa secara tekstual; belum dilakukan instalasi dependency.
+- **Test/lint/typecheck/build:** Tidak dijalankan karena akses eksekusi repository/terminal tidak tersedia pada sesi ini. Belum ada CI run. Status bukan VERIFIED.
+- **Keterbatasan:** package-lock.json belum tersedia; README mencatat agar npm install menghasilkan lockfile yang kemudian di-commit sebelum mengaktifkan instalasi CI/deployment yang reproducible.
+- **Commit progres awal:** f2d273c3ee6f973e79bb7b56494ad503e5870164 (dikoreksi dengan commit pemulihan riwayat 7e608e0fb8b0db90d8f1bd8aab1969c3369c3aa1).
+- **Commit scaffold:** a4e41cd25ec0dff2f86bbca8bcd529a579b392b3
+- **Branch:** feat/p0-4-app-foundation
+- **Status merge:** UNMERGED — PR belum dibuat pada saat catatan ini ditulis.
