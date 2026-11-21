@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge, Card, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 
 const productAreas = [
@@ -34,7 +35,12 @@ export default function HomePage() {
             <span className="text-sm text-secondary">Indonesia</span>
           </div>
         </div>
-        <Badge tone="neutral">Platform operasional</Badge>
+        <div className="flex items-center gap-3">
+          <Badge tone="neutral">Platform operasional</Badge>
+          <Link href="/dashboard" className="inline-flex min-h-10 items-center justify-center rounded-xl bg-accent px-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent motion-reduce:transition-none">
+            Buka workspace
+          </Link>
+        </div>
       </header>
 
       <section className="grid flex-1 content-center gap-12 py-16 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)] lg:items-center lg:gap-20 lg:py-24">
