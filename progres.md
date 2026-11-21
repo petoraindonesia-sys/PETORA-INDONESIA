@@ -318,3 +318,12 @@
 - **Bukti deploy/database:** Edge Function ACTIVE versi 3; migrations 20261121011026, 20261121011108, 20261121011150 terdaftar; SQL test di atas berhasil dijalankan pada project ref yywiviksohbqxyultprz.
 - **Bukti Git:** branch feat/p0-8-2-auth-username-pin-poc, latest known commit ca69601003fae07bf0f1903bda2ce554eb41d4d7.
 - **Status tahap:** IN_PROGRESS (implementasi database/function tersedia; end-to-end Auth belum teruji). **Status merge:** UNMERGED; PR belum dibuat.
+
+
+### Koreksi bukti Git POC
+- PR draft #11 dibuat: https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/11
+- Head commit PR saat dibuat: 36660d85c3d160550446ab35416e8752b45a353e.
+- Base main: 245d9c0aa6eac08f5bf06c4955a2bf69e3b2bcd0.
+- Status PR: OPEN, DRAFT, UNMERGED. Belum ada CI result yang diverifikasi untuk PR ini.
+- Perubahan PR: 6 file (3 migration, 1 Edge Function, 1 SQL test, progres.md).
+- Tahap tetap IN_PROGRESS sampai sesi Auth nyata dan test end-to-end dijalankan.
