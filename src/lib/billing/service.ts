@@ -280,3 +280,178 @@ export async function voidInvoice(
     [input.reason, input.actorId, input.invoiceId],
   );
 }
+
+export interface InvoiceSummary {
+  id: string;
+  branchId: string;
+  customerId: string | null;
+  petId: string | null;
+  status: string;
+  subtotal: number;
+  discount: number;
+  tax: number;
+  total: number;
+  paidAmount: number;
+  createdAt: Date;
+}
+
+/** Daftar tagihan (terlihat oleh RLS, per cabang aktor). */
+export async function listInvoices(
+  tx: PoolClient,
+  opts: { branchId?: string; limit?: number } = {},
+): Promise<InvoiceSummary[]> {
+  const params: unknown[] = [];
+  const where: string[] = [];
+  if (opts.branchId) {
+    params.push(opts.branchId);
+    where.push(`branch_id = $${params.length}`);
+  }
+  if (opts.limit) {
+    params.push(opts.limit);
+    where.push(`true`);
+  }
+  const whereSql = where.length ? `where ${where.join(" and ")}` : "";
+  const limitSql = opts.limit ? `limit $${params.length}` : "";
+  const res = await tx.query<{
+    id: string;
+    branch_id: string;
+    customer_id: string | null;
+    pet_id: string | null;
+    status: string;
+    subtotal: number;
+    discount: number;
+    tax: number;
+    total: number;
+    paid_amount: number;
+    created_at: Date;
+  }>(
+    `select id, branch_id, customer_id, pet_id, status, subtotal, discount, tax, total, paid_amount, created_at
+       from invoice ${whereSql} order by created_at desc ${limitSql}`,
+    params,
+  );
+  return res.rows.map((r) => ({
+    id: r.id,
+    branchId: r.branch_id,
+    customerId: r.customer_id,
+    petId: r.pet_id,
+    status: r.status,
+    subtotal: r.subtotal,
+    discount: r.discount,
+    tax: r.tax,
+    total: r.total,
+    paidAmount: r.paid_amount,
+    createdAt: r.created_at,
+  }));
+}
+
+export interface InvoiceDetail extends InvoiceSummary {
+  taxRate: number;
+  taxEnabled: boolean;
+  taxPricesInclude: boolean;
+  roundingAdjustment: number;
+  voidReason: string | null;
+  items: {
+    id: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    taxable: boolean;
+    kind: string;
+  }[];
+  payments: {
+    id: string;
+    method: string;
+    amount: number;
+    cashReceived: number | null;
+    changeAmount: number | null;
+    reference: string | null;
+    createdAt: Date;
+  }[];
+}
+
+/** Detail tagihan + item + pembayaran (terlihat oleh RLS). */
+export async function getInvoice(tx: PoolClient, id: string): Promise<InvoiceDetail | null> {
+  const invRes = await tx.query<{
+    id: string;
+    branch_id: string;
+    customer_id: string | null;
+    pet_id: string | null;
+    status: string;
+    subtotal: number;
+    discount: number;
+    tax: number;
+    tax_rate: string;
+    tax_enabled: boolean;
+    tax_prices_include: boolean;
+    rounding_adjustment: number;
+    total: number;
+    paid_amount: number;
+    void_reason: string | null;
+    created_at: Date;
+  }>(
+    `select id, branch_id, customer_id, pet_id, status, subtotal, discount, tax, tax_rate,
+            tax_enabled, tax_prices_include, rounding_adjustment, total, paid_amount, void_reason, created_at
+       from invoice where id = $1`,
+    [id],
+  );
+  if (!invRes.rows[0]) return null;
+  const r = invRes.rows[0];
+  const items = await tx.query<{
+    id: string;
+    description: string;
+    quantity: number;
+    unit_price: number;
+    taxable: boolean;
+    kind: string;
+  }>(
+    `select id, description, quantity, unit_price, taxable, kind from invoice_item where invoice_id = $1 order by created_at asc`,
+    [id],
+  );
+  const payments = await tx.query<{
+    id: string;
+    method: string;
+    amount: number;
+    cash_received: number | null;
+    change_amount: number | null;
+    reference: string | null;
+    created_at: Date;
+  }>(
+    `select id, method, amount, cash_received, change_amount, reference, created_at from payment where invoice_id = $1 order by created_at asc`,
+    [id],
+  );
+  return {
+    id: r.id,
+    branchId: r.branch_id,
+    customerId: r.customer_id,
+    petId: r.pet_id,
+    status: r.status,
+    subtotal: r.subtotal,
+    discount: r.discount,
+    tax: r.tax,
+    taxRate: Number(r.tax_rate),
+    taxEnabled: r.tax_enabled,
+    taxPricesInclude: r.tax_prices_include,
+    roundingAdjustment: r.rounding_adjustment,
+    total: r.total,
+    paidAmount: r.paid_amount,
+    voidReason: r.void_reason,
+    createdAt: r.created_at,
+    items: items.rows.map((it) => ({
+      id: it.id,
+      description: it.description,
+      quantity: it.quantity,
+      unitPrice: it.unit_price,
+      taxable: it.taxable,
+      kind: it.kind,
+    })),
+    payments: payments.rows.map((p) => ({
+      id: p.id,
+      method: p.method,
+      amount: p.amount,
+      cashReceived: p.cash_received,
+      changeAmount: p.change_amount,
+      reference: p.reference,
+      createdAt: p.created_at,
+    })),
+  };
+}

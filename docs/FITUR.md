@@ -33,6 +33,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Buat tagihan + koreksi stok atomik (BR-009/020/021) | terverifikasi | Contoh baku Rp296.500 tersimpan; rollback bila stok kurang | `src/lib/billing/service.ts` |
 | Catat pembayaran idempoten (BR-010/018) | terverifikasi | Sebagian→lunas; uang kembali tunai; bayar ganda dicegah | `src/lib/billing/service.ts` |
 | Void tagihan (BR-011) | terverifikasi | Butuh izin invoice.void; ditolak bila sudah dibayar | `src/lib/billing/service.ts` |
+| Daftar & detail tagihan (listInvoices/getInvoice) | terverifikasi | RLS batasi per cabang; detail memuat item + pembayaran; 4 tes hijau | `src/lib/billing/service.ts` |
 
 ## Tes integrasi (pnpm test:db — Postgres Docker)
 
@@ -40,7 +41,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 |---|---|---|
 | RLS isolasi cabang & medis (BR-001/002/003/004) | terverifikasi | 9 tes `.itest.ts` hijau |
 | Inventori & FEFO (BR-006/007) | terverifikasi | 5 tes `.itest.ts` hijau |
-| Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 9 tes `.itest.ts` hijau |
+| Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 13 tes `.itest.ts` hijau |
 | Autentikasi lokal (sesi + password) | terverifikasi | 14 tes `.itest.ts` hijau |
 | Cabang (BR-001/016, Owner CRUD, RLS) | terverifikasi | 12 tes `.itest.ts` hijau |
 
@@ -51,6 +52,8 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Service cabang (list/get/create/update/deactivate) | terverifikasi | Owner CRUD; Staff ditolak RLS; zona waktu divalidasi | `src/lib/branches/service.ts` |
 | API /api/branches (GET/POST) + /[id] (PATCH/DELETE) | terverifikasi | build hijau; requireActor + RLS | `src/app/api/branches/` |
 | Halaman /app/branches (Owner) | proses | UI daftar + form tambah; belum uji browser | `src/app/app/branches/page.tsx` |
+| API /api/invoices (GET/POST) + /[id]/payments (POST) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/invoices/` |
+| Halaman /app/cashier | proses | Buat tagihan (item/diskon/PPN/pembulatan) + catat pembayaran; belum uji browser | `src/app/app/cashier/page.tsx` |
 
 ## Autentikasi lokal (src/lib/auth, tanpa Supabase)
 
@@ -79,8 +82,8 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Inventori | Wajib v1 | sebagian | Stok per cabang, batch, FEFO, mutasi teruji; UI belum |
 | Transfer stok antar cabang | Wajib v1 | rencana | draft→kirim→terima; selisih ditinjau |
 | Pengadaan | Wajib v1 | sebagian | Terima stok (pembuatan batch) teruji; PO/batch UI belum |
-| Kasir & transaksi | Wajib v1 | sebagian | Tagihan terpadu + diskon/PPN/pembulatan teruji; UI belum |
-| Pembayaran manual | Wajib v1 | sebagian | Tunai/transfer/QRIS/kartu + sebagian + anti-ganda teruji; UI belum |
+| Kasir & transaksi | Wajib v1 | sebagian | Tagihan terpadu + diskon/PPN/pembulatan teruji; UI /app/cashier dibuat, belum uji browser |
+| Pembayaran manual | Wajib v1 | sebagian | Tunai/transfer/QRIS/kartu + sebagian + anti-ganda teruji; UI /app/cashier dibuat, belum uji browser |
 | Laporan operasional | Wajib v1 | rencana | Penjualan/kunjungan/stok/pajak; batas hari per zona |
 | Pet Owner Portal | Wajib v1 | rencana | Hanya baca; hanya data sendiri |
 

@@ -7,17 +7,17 @@ terverifikasi. Produk: aplikasi web operasional klinik hewan + pet shop, satu
 perusahaan banyak cabang, backend Postgres (local-first, tanpa Supabase — K-009), UI
 bergaya Apple, Bahasa Indonesia. Fondasi kode, modul domain murni, skema DB + RLS,
 lapisan data (withActor), service inventori & billing, service autentikasi lokal, dan
-service cabang sudah dibuat & **terverifikasi** (38 tes unit + 49 tes integrasi hijau;
-build/lint/typecheck hijau). UI masih minimal (login, /app, cabang).
+service cabang sudah dibuat & **terverifikasi** (38 tes unit + 53 tes integrasi hijau;
+build/lint/typecheck hijau). UI masih minimal (login, /app, cabang, kasir).
 
 ## Sedang dikerjakan
 
-- **Tugas**: UI Organisasi & cabang (Owner) + service + API + tes. Status: **selesai & terverifikasi**.
+- **Tugas**: UI Kasir (buat tagihan + pembayaran) + service daftar/detail tagihan + API + tes. Status: **selesai & terverifikasi**.
 - **Branch**: `main`.
-- **Titik berhenti**: Cabang hijau; UI kasir/rekam medis belum.
+- **Titik berhenti**: Kasir hijau (service/API/tes + build). UI rekam medis/pelanggan belum.
 - **Langkah berikutnya konkret**:
-  1. UI Kasir: buat tagihan (pakai `createInvoice`) + catat pembayaran (`recordPayment`).
-  2. UI Rekam medis (Dokter) & Pelanggan/Pasien.
+  1. UI Rekam medis (Dokter) & Pelanggan/Pasien.
+  2. Uji browser alur kasir (login → buat tagihan → bayar) sebagai Staff A.
   3. Integrasi Supabase (ganti `DATABASE_URL`) & deploy — butuh akun (di luar kendali).
 
 ## Tumpukan jeda
@@ -37,9 +37,13 @@ _Kosong._
 3. API /api/branches (GET/POST) + /[id] (PATCH/DELETE) dengan requireActor. (terverifikasi)
 4. Halaman /app/branches (Owner): daftar + form tambah + zona waktu. (proses — belum uji browser)
 5. 12 tes integrasi cabang (Owner CRUD, Staff ditolak RLS, zona waktu invalid ditolak). (terverifikasi)
+6. Service billing: `listInvoices` + `getInvoice` (RLS, detail item+pembayaran). (terverifikasi)
+7. API /api/invoices (GET/POST) + /[id] (GET) + /[id]/payments (POST). (terverifikasi)
+8. Halaman /app/cashier: buat tagihan (item/diskon/PPN/pembulatan) + catat pembayaran. (proses — belum uji browser)
+9. 4 tes integrasi listInvoices/getInvoice (RLS batasi cabang, filter branchId, detail benar). (terverifikasi)
 
 ## Langkah berikutnya
 
-1. UI Kasir & pembayaran (pakai service billing yang sudah teruji).
-2. UI Rekam medis + Pelanggan & hewan.
+1. UI Rekam medis + Pelanggan & hewan.
+2. Uji browser alur kasir (login → buat tagihan → bayar) sebagai Staff A.
 3. Siapkan Supabase & deploy (Vercel) — perlu pengguna (AGENTS.md §12).

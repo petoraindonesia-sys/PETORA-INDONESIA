@@ -6,7 +6,13 @@ import { describe, it, expect } from "vitest";
 import { randomUUID } from "node:crypto";
 import { withActor, adminQuery } from "@/lib/db";
 import { receiveStock } from "@/lib/inventory/service";
-import { createInvoice, recordPayment, voidInvoice } from "@/lib/billing/service";
+import {
+  createInvoice,
+  recordPayment,
+  voidInvoice,
+  listInvoices,
+  getInvoice,
+} from "@/lib/billing/service";
 import { USER, BRANCH, CUSTOMER_ID, PET_ID } from "./fixtures";
 
 const P_CONSULT = "50000000-0000-4000-8000-000000000001"; // 75.000
@@ -385,5 +391,120 @@ describe("Kasir - void (BR-011)", () => {
     )[0];
     expect(inv2.status).toBe("void");
     expect(inv2.void_reason).toBe("Salah pasien");
+  });
+});
+
+describe("Kasir - daftar & detail tagihan (RLS)", () => {
+  it("listInvoices hanya menampilkan tagihan cabang aktor", async () => {
+    await clearInvoices(BRANCH.B1);
+    await clearInvoices(BRANCH.B2);
+    await withActor(USER.STAFF_A, async (tx) =>
+      createInvoice(tx, {
+        branchId: BRANCH.B1,
+        items: [
+          { name: "Konsultasi", quantity: 1, unitPrice: 50000, taxable: false, kind: "service" },
+        ],
+        tax: { enabled: false, ratePercent: 0, pricesIncludeTax: false },
+        rounding: 0,
+        actorId: USER.STAFF_A,
+      }),
+    );
+    // Tagihan di cabang B sebagai Owner (Staff A tidak punya akses B).
+    await withActor(USER.OWNER, async (tx) =>
+      createInvoice(tx, {
+        branchId: BRANCH.B2,
+        items: [
+          { name: "Vaksin", quantity: 1, unitPrice: 100000, taxable: false, kind: "service" },
+        ],
+        tax: { enabled: false, ratePercent: 0, pricesIncludeTax: false },
+        rounding: 0,
+        actorId: USER.OWNER,
+      }),
+    );
+
+    const visible = await withActor(USER.STAFF_A, async (tx) => listInvoices(tx));
+    expect(visible.length).toBeGreaterThanOrEqual(1);
+    expect(visible.every((i) => i.branchId === BRANCH.B1)).toBe(true);
+
+    // Owner melihat semua cabang.
+    const all = await withActor(USER.OWNER, async (tx) => listInvoices(tx));
+    const branches = new Set(all.map((i) => i.branchId));
+    expect(branches.has(BRANCH.B1)).toBe(true);
+    expect(branches.has(BRANCH.B2)).toBe(true);
+  });
+
+  it("listInvoices memfilter berdasarkan branchId", async () => {
+    await clearInvoices(BRANCH.B1);
+    await clearInvoices(BRANCH.B2);
+    await withActor(USER.OWNER, async (tx) =>
+      createInvoice(tx, {
+        branchId: BRANCH.B1,
+        items: [
+          { name: "Konsultasi", quantity: 1, unitPrice: 50000, taxable: false, kind: "service" },
+        ],
+        tax: { enabled: false, ratePercent: 0, pricesIncludeTax: false },
+        rounding: 0,
+        actorId: USER.OWNER,
+      }),
+    );
+    await withActor(USER.OWNER, async (tx) =>
+      createInvoice(tx, {
+        branchId: BRANCH.B2,
+        items: [
+          { name: "Vaksin", quantity: 1, unitPrice: 100000, taxable: false, kind: "service" },
+        ],
+        tax: { enabled: false, ratePercent: 0, pricesIncludeTax: false },
+        rounding: 0,
+        actorId: USER.OWNER,
+      }),
+    );
+    const onlyB1 = await withActor(USER.OWNER, async (tx) =>
+      listInvoices(tx, { branchId: BRANCH.B1 }),
+    );
+    expect(onlyB1.length).toBe(1);
+    expect(onlyB1[0].branchId).toBe(BRANCH.B1);
+  });
+
+  it("getInvoice mengembalikan item & pembayaran dengan benar", async () => {
+    await clearInvoices(BRANCH.B1);
+    const inv = await withActor(USER.STAFF_A, async (tx) =>
+      createInvoice(tx, {
+        branchId: BRANCH.B1,
+        customerId: CUSTOMER_ID,
+        petId: PET_ID,
+        items: [
+          { name: "Konsultasi", quantity: 1, unitPrice: 100000, taxable: false, kind: "service" },
+          { name: "Obat", quantity: 2, unitPrice: 50000, taxable: false, kind: "medicine" },
+        ],
+        tax: { enabled: false, ratePercent: 0, pricesIncludeTax: false },
+        rounding: 0,
+        actorId: USER.STAFF_A,
+      }),
+    );
+    await withActor(USER.STAFF_A, async (tx) =>
+      recordPayment(tx, {
+        invoiceId: inv.invoiceId,
+        method: "cash",
+        amount: 50000,
+        cashReceived: 50000,
+        idempotencyKey: randomUUID(),
+        actorId: USER.STAFF_A,
+      }),
+    );
+
+    const detail = await withActor(USER.STAFF_A, async (tx) => getInvoice(tx, inv.invoiceId));
+    expect(detail).not.toBeNull();
+    expect(detail!.items.length).toBe(2);
+    expect(detail!.payments.length).toBe(1);
+    expect(detail!.total).toBe(200000);
+    expect(detail!.paidAmount).toBe(50000);
+    expect(detail!.status).toBe("partial");
+  });
+
+  it("getInvoice mengembalikan null untuk id tidak ada", async () => {
+    const detail = await withActor(USER.STAFF_A, async (tx) =>
+      getInvoice(tx, "50000000-0000-4000-8000-0000000fffff"),
+    );
+    expect(detail).toBeNull();
   });
 });

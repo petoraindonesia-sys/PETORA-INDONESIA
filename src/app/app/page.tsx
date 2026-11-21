@@ -17,6 +17,24 @@ export default async function AppHome() {
       <p className="mt-2 text-sm opacity-60">
         {session.user.isOwner ? "Peran: Owner" : "Peran: Staff/Operasional"}
       </p>
+      <nav className="mt-6 flex gap-2">
+        <a
+          href="/app/cashier"
+          className="rounded-xl border px-4 py-2 text-sm"
+          style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        >
+          Kasir
+        </a>
+        {session.user.isOwner ? (
+          <a
+            href="/app/branches"
+            className="rounded-xl border px-4 py-2 text-sm"
+            style={{ borderColor: "rgba(0,0,0,0.12)" }}
+          >
+            Cabang
+          </a>
+        ) : null}
+      </nav>
       <form action="/api/auth/logout" method="post" className="mt-8">
         <button
           type="submit"
