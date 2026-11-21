@@ -36,3 +36,16 @@
   - Perubahan database, autentikasi, otorisasi, dan UI memiliki aturan implementasi serta verifikasi yang eksplisit.
   - Tidak ada asumsi konfigurasi, keputusan bisnis, atau klaim hasil yang tidak didukung bukti.
   - Aturan yang telah disetujui Owner dan kontrak Apple Design tetap dipertahankan.
+
+
+### Catatan penyelesaian P0.2
+- **Status akhir:** IMPLEMENTED
+- **File diubah:** AGENTS.md, progres.md.
+- **Perubahan:** Ditambahkan kontrak prioritas sumber kebenaran, protokol inspeksi repository, implementasi vertikal, standar Supabase/RLS, Vercel, autentikasi/RBAC/audit, pengujian, dependensi, Git/review, dan format laporan.
+- **Pemeriksaan:** AGENTS.md berhasil dibaca kembali setelah commit dan memuat bagian 11–20. progres.md dibaca sebelum penutupan entri.
+- **Pengujian aplikasi:** Tidak dijalankan; repository belum memiliki implementasi aplikasi yang dapat diuji dalam pekerjaan ini.
+- **Commit entri IN_PROGRESS:** dc1fa7978e8e3f19cd26d93c19045fb40ea836e6
+- **Commit AGENTS.md:** 12cc4d0e8e5492338549744a0a11fac9254fdbe5
+- **Commit penutupan progres:** akan dicatat oleh commit ini.
+- **Status merge:** Perubahan langsung pada main; tidak ada PR.
+- **Catatan:** Kontrak agen diperluas pada level dokumentasi. Belum ada implementasi aplikasi, test runtime, atau deployment yang diverifikasi.
