@@ -54,3 +54,17 @@
 #### Koreksi bukti commit P0.2
 - **Commit penutupan progres yang sebenarnya:** 5db565897c8fff72b94358909725af4abeb3f28e
 - Catatan sebelumnya yang menyebut SHA akan dicatat oleh commit tersebut dilengkapi dengan SHA aktual ini. Riwayat sebelumnya dipertahankan.
+
+
+## P0.3 — Instruksi Agen Turunan per Area
+
+- **Status:** IN_PROGRESS
+- **Branch:** docs/p0-3-scoped-agent-guides
+- **Tujuan:** Menambahkan instruksi teknis khusus frontend dan Supabase tanpa menduplikasi atau bertentangan dengan kontrak root.
+- **Scope:** Membuat apps/web/AGENTS.md dan supabase/AGENTS.md. Keduanya menjadi pedoman direktori yang akan digunakan saat struktur implementasi dibuat.
+- **Acceptance criteria:**
+  - Instruksi frontend mencakup Apple Design, Next.js/TypeScript, aksesibilitas, keamanan browser/server, state UI, dan pengujian.
+  - Instruksi Supabase mencakup migration, schema, RLS, branch isolation, Auth, Edge Functions/Storage bila digunakan, audit, dan database testing.
+  - Tidak mengarang struktur aplikasi, nama tabel, environment variable, atau fitur yang belum ditetapkan.
+  - Kedua dokumen menyatakan bahwa aturan root dan keputusan Owner tetap mengikat.
+  - File dibaca kembali setelah commit; keterbatasan pengujian dicatat secara jujur.
