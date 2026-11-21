@@ -166,3 +166,42 @@
 - **PR:** #3 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/3
 - **Status merge:** UNMERGED — PR #3 masih terbuka; belum masuk main.
 - **Batas verifikasi:** Yang diverifikasi adalah install, lint, typecheck, dan production build frontend. Belum ada pengujian browser/E2E, integrasi Supabase, atau deployment Vercel.
+
+
+## P0.6 — Fondasi Design System Apple
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-6-apple-design-system
+- **Tujuan:** Mengubah token visual dasar menjadi fondasi Design System Apple yang reusable dan aksesibel untuk seluruh area frontend PETORA.
+- **Scope:** Audit implementasi frontend yang sudah ada; menyempurnakan design tokens; membuat komponen dasar Button, Input, Select, Card, Badge, dan komponen status; menerapkan komponen pada halaman awal tanpa menambahkan data operasional palsu atau navigasi/aksi semu; menambahkan state interaksi dan responsive/accessibility styling.
+- **Acceptance criteria:**
+  - Token warna, tipografi, spacing, radius, border, elevation, dan focus konsisten serta terpusat.
+  - Komponen dasar reusable memiliki API TypeScript yang jelas dan state relevan (default, hover, focus, disabled, invalid/loading bila sesuai).
+  - Form controls memiliki label dan pesan/helper text yang aksesibel.
+  - Layout mendukung mobile, tablet, dan desktop serta prefers-reduced-motion.
+  - Tidak ada dependensi UI tambahan tanpa kebutuhan terukur.
+  - Halaman awal menggunakan sistem visual yang sama dan tidak menampilkan data operasional palsu atau tombol tanpa aksi.
+  - GitHub Actions berhasil menjalankan install, lint, typecheck, dan production build.
+- **Batas verifikasi:** Belum ada test runner unit/component atau browser E2E pada package saat tahap dimulai. CI build/lint/typecheck tidak membuktikan interaksi browser atau aksesibilitas secara menyeluruh; keterbatasan ini harus dicatat.
+
+
+### Catatan penyelesaian P0.6
+- **Status akhir:** VERIFIED untuk pemeriksaan CI yang tersedia; verifikasi visual/browser masih belum dilakukan.
+- **File dibuat:** apps/web/components/ui/button.tsx, input.tsx, select.tsx, card.tsx, badge.tsx, status-message.tsx, index.ts.
+- **File diubah:** apps/web/app/globals.css, apps/web/app/page.tsx, progres.md.
+- **Implementasi:** Design tokens Apple diperluas untuk surface, warna semantik, aksen, border, typography, radius, focus, dan elevation. Komponen reusable memiliki API TypeScript, varian/status yang sesuai, label/helper/error untuk kontrol form, loading/disabled untuk Button, role status/alert, focus-visible, responsive layout, dan reduced-motion.
+- **Dependensi:** Tidak ada dependency UI baru.
+- **Verifikasi CI:** GitHub Actions run #16 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/actions/runs/44846077441 — SUCCESS pada commit 0dea6c0391de95e80a7f95412c0d27f1f832a7bd. Verify lockfile, npm ci, lint, typecheck, dan production build seluruhnya sukses.
+- **Catatan PR CI:** PR-triggered run #17 masih berjalan saat catatan ini dibuat; run #16 adalah push run pada SHA yang sama persis dengan head PR #4 dan semua langkahnya sukses.
+- **Pengujian yang belum dilakukan:** Tidak tersedia unit/component test runner atau browser E2E. Belum dilakukan inspeksi visual langsung, pengujian keyboard di browser, screen reader, atau audit kontras otomatis. Build CI bukan bukti penerimaan UX penuh.
+- **Branch:** feat/p0-6-apple-design-system.
+- **PR:** #4 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/4.
+- **Head commit:** 0dea6c0391de95e80a7f95412c0d27f1f832a7bd.
+- **Status merge:** UNMERGED — PR #4 masih terbuka dan belum masuk main.
+
+
+#### Koreksi hasil CI P0.6
+- **PR-triggered run #17:** https://github.com/petoraindonesia-sys/PETORA-INDONESIA/actions/runs/44846100096 — SUCCESS.
+- Run #17 menguji commit aplikasi 0dea6c0391de95e80a7f95412c0d27f1f832a7bd, yaitu commit yang sama dengan kode frontend pada head PR saat ini; setelah itu hanya progres.md yang berubah.
+- Catatan sebelumnya yang menyebut run #17 masih berjalan adalah status sementara saat entri penyelesaian ditulis. Riwayat tersebut dipertahankan dan dikoreksi melalui catatan ini.
+- **Head PR terkini:** e468118833b2673efc0ce4ea231b6c4732dd56e2 (perubahan progres.md).

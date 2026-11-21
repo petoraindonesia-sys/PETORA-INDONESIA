@@ -3,23 +3,69 @@
 @theme inline {
   --color-canvas: var(--petora-canvas);
   --color-surface: var(--petora-surface);
+  --color-surface-muted: var(--petora-surface-muted);
+  --color-surface-subtle: var(--petora-surface-subtle);
   --color-primary: var(--petora-primary);
   --color-secondary: var(--petora-secondary);
+  --color-tertiary: var(--petora-tertiary);
   --color-accent: var(--petora-accent);
+  --color-accent-hover: var(--petora-accent-hover);
+  --color-accent-pressed: var(--petora-accent-pressed);
+  --color-accent-disabled: var(--petora-accent-disabled);
+  --color-accent-subtle: var(--petora-accent-subtle);
+  --color-accent-muted: var(--petora-accent-muted);
+  --color-accent-strong: var(--petora-accent-strong);
   --color-border: var(--petora-border);
+  --color-control-hover: var(--petora-control-hover);
+  --color-success: var(--petora-success);
+  --color-success-subtle: var(--petora-success-subtle);
+  --color-success-strong: var(--petora-success-strong);
+  --color-warning: var(--petora-warning);
+  --color-warning-subtle: var(--petora-warning-subtle);
+  --color-warning-strong: var(--petora-warning-strong);
+  --color-danger: var(--petora-danger);
+  --color-danger-hover: var(--petora-danger-hover);
+  --color-danger-pressed: var(--petora-danger-pressed);
+  --color-danger-subtle: var(--petora-danger-subtle);
+  --color-danger-strong: var(--petora-danger-strong);
   --font-sans: var(--petora-font);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 3%), 0 8px 24px rgb(0 0 0 / 3%);
 }
 
 :root {
   color-scheme: light;
   --petora-canvas: #f5f5f7;
   --petora-surface: #ffffff;
+  --petora-surface-muted: #f5f5f7;
+  --petora-surface-subtle: #f0f0f2;
   --petora-primary: #1d1d1f;
   --petora-secondary: #6e6e73;
+  --petora-tertiary: #8e8e93;
   --petora-accent: #007aff;
+  --petora-accent-hover: #0071eb;
+  --petora-accent-pressed: #0064d2;
+  --petora-accent-disabled: #8abfff;
+  --petora-accent-subtle: #eef6ff;
+  --petora-accent-muted: #e2efff;
+  --petora-accent-strong: #0059c7;
   --petora-border: #e5e5ea;
-  --petora-font:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --petora-control-hover: #c7c7cc;
+  --petora-success: #248a3d;
+  --petora-success-subtle: #edf8ef;
+  --petora-success-strong: #176b2d;
+  --petora-warning: #9a6700;
+  --petora-warning-subtle: #fff7e5;
+  --petora-warning-strong: #805500;
+  --petora-danger: #d70015;
+  --petora-danger-hover: #c40012;
+  --petora-danger-pressed: #a90010;
+  --petora-danger-subtle: #fff0f0;
+  --petora-danger-strong: #b00012;
+  --petora-font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --petora-space-unit: 0.25rem;
+  --petora-radius-control: 0.75rem;
+  --petora-radius-card: 1rem;
+  --petora-focus-ring: 0 0 0 4px rgb(0 122 255 / 12%);
 }
 
 * {
@@ -29,6 +75,7 @@
 html {
   min-height: 100%;
   background: var(--petora-canvas);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -49,4 +96,15 @@ body {
 :focus-visible {
   outline: 3px solid var(--petora-accent);
   outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
