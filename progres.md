@@ -54,3 +54,32 @@
 #### Koreksi bukti commit P0.2
 - **Commit penutupan progres yang sebenarnya:** 5db565897c8fff72b94358909725af4abeb3f28e
 - Catatan sebelumnya yang menyebut SHA akan dicatat oleh commit tersebut dilengkapi dengan SHA aktual ini. Riwayat sebelumnya dipertahankan.
+
+
+## P0.3 — Instruksi Agen Turunan per Area
+
+- **Status:** IN_PROGRESS
+- **Branch:** docs/p0-3-scoped-agent-guides
+- **Tujuan:** Menambahkan instruksi teknis khusus frontend dan Supabase tanpa menduplikasi atau bertentangan dengan kontrak root.
+- **Scope:** Membuat apps/web/AGENTS.md dan supabase/AGENTS.md. Keduanya menjadi pedoman direktori yang akan digunakan saat struktur implementasi dibuat.
+- **Acceptance criteria:**
+  - Instruksi frontend mencakup Apple Design, Next.js/TypeScript, aksesibilitas, keamanan browser/server, state UI, dan pengujian.
+  - Instruksi Supabase mencakup migration, schema, RLS, branch isolation, Auth, Edge Functions/Storage bila digunakan, audit, dan database testing.
+  - Tidak mengarang struktur aplikasi, nama tabel, environment variable, atau fitur yang belum ditetapkan.
+  - Kedua dokumen menyatakan bahwa aturan root dan keputusan Owner tetap mengikat.
+  - File dibaca kembali setelah commit; keterbatasan pengujian dicatat secara jujur.
+
+
+### Catatan penyelesaian P0.3
+- **Status akhir:** IMPLEMENTED
+- **File dibuat:** apps/web/AGENTS.md, supabase/AGENTS.md; progres.md diperbarui.
+- **Frontend guide:** Apple Design, Next.js/TypeScript, komponen, keamanan sesi, branch context, form, aksesibilitas, performa, dan pengujian.
+- **Supabase guide:** schema/migration, multi-branch, RLS, Auth/RBAC, RPC/Edge Functions, Storage/Realtime, audit, environment, dan database security testing.
+- **Pemeriksaan:** Kedua file berhasil dibaca kembali dari branch dan bagian penutup masing-masing ditemukan.
+- **Pengujian aplikasi/database:** Tidak dijalankan. Repository belum menyediakan implementasi aplikasi/database untuk diuji; pekerjaan ini hanya menambahkan pedoman.
+- **Commit IN_PROGRESS:** f5c0592ad819de9fa8276ada4c42c330ed2a0170
+- **Commit apps/web/AGENTS.md:** 639d21bd9697b68382adcfe7693b7d7dffc847a5
+- **Commit supabase/AGENTS.md:** cb2942289ee3ec51da51cb34be55352ba5cf45be
+- **Branch:** docs/p0-3-scoped-agent-guides
+- **Status merge:** UNMERGED — belum dibuat PR dan belum masuk main.
+- **Catatan:** Dokumen instruksi tersedia di branch kerja. Belum ada verifikasi runtime, test, atau deployment.
