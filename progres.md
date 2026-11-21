@@ -271,3 +271,22 @@
 - **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
 - **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
 - **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
+
+
+## P0.8.1 — Validasi Project Supabase PETORA
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-1-supabase-project-connection
+- **Tujuan:** Menghubungkan pekerjaan P0.8 dengan project Supabase PETORA yang aktif dan memvalidasi kondisi database sebelum perubahan schema/Auth.
+- **Scope:** Memverifikasi identitas project, region, status, URL API, akses database, tabel, dan riwayat migration; memperbarui catatan progres tanpa menyimpan credential; mempertahankan keputusan autentikasi username + PIN sebagai PENDING sampai mekanisme sesi Supabase tervalidasi.
+- **Acceptance criteria:**
+  - Project Supabase yang benar teridentifikasi dan berstatus ACTIVE_HEALTHY.
+  - Region dan project ref cocok dengan target PETORA.
+  - Koneksi database dapat diperiksa melalui Supabase MCP.
+  - Kondisi awal tabel dan migration tercatat berdasarkan hasil aktual.
+  - Tidak ada secret, database password, service-role key, atau credential di repository.
+  - Tidak ada schema/Auth yang dibuat sebelum desain login, model data, RLS, dan prosedur migration dapat diverifikasi.
+  - File progres diperbarui pada branch yang sama; perubahan tetap UNMERGED sampai benar-benar digabung.
+- **Temuan awal:** Project `petora-indonesia` dengan ref `tpqrcjsmijzbtgmertdo` ditemukan dalam organisasi yang telah dikonfirmasi; status `ACTIVE_HEALTHY`, region `ap-southeast-1`, PostgreSQL `17.12`. URL API: `https://tpqrcjsmijzbtgmertdo.supabase.co`.
+- **Pemeriksaan database awal:** Supabase MCP berhasil membaca project. Schema `public` belum memiliki tabel; daftar migration database kosong.
+- **Keterbatasan saat mulai:** Belum ada migration SQL di repository selain `supabase/config.toml` dan `supabase/AGENTS.md`; belum tersedia bukti mekanisme username + PIN yang menghasilkan sesi Supabase Auth valid. Tidak ada perubahan schema/Auth cloud pada langkah inspeksi ini.
