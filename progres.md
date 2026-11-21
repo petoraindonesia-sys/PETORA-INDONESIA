@@ -122,3 +122,10 @@
 - **Commit scaffold:** a4e41cd25ec0dff2f86bbca8bcd529a579b392b3
 - **Branch:** feat/p0-4-app-foundation
 - **Status merge:** UNMERGED — PR belum dibuat pada saat catatan ini ditulis.
+
+
+#### Koreksi status PR P0.4
+- **PR:** #2 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/2
+- **Status PR:** OPEN, UNMERGED
+- **Head commit:** 394725c9e6533bb06e5e117debccdec17d26c758
+- **Catatan koreksi:** Baris sebelumnya menyebut PR belum dibuat karena ditulis sebelum PR dibuka. PR #2 kini sudah dibuat; belum digabung ke main.
