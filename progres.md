@@ -271,3 +271,14 @@
 - **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
 - **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
 - **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
+
+
+## P0.8 lanjutan — Bootstrap project Supabase PETORA
+
+- **Status:** IN_PROGRESS
+- **Branch:** feat/p0-8-supabase-project-bootstrap
+- **Tujuan:** Menghubungkan konfigurasi Supabase repository ke project cloud PETORA yang baru dibuat dan memverifikasi kesiapan awal project tanpa membuat schema/Auth spekulatif.
+- **Scope:** Mencatat project ref non-secret pada supabase/config.toml; memeriksa status project, URL API, konfigurasi CLI, instruksi Supabase, migration/test yang sudah ada, dan kesiapan database; mempertahankan blocker autentikasi username + PIN sampai mekanisme sesi Supabase terbukti.
+- **Acceptance criteria:** Project ref repository sama dengan project Supabase aktual; project berstatus ACTIVE_HEALTHY; konfigurasi dan file terkait dibaca kembali; tidak ada secret/credential di repository; tidak ada schema/policy/Auth buatan asumsi; status progres membedakan konfigurasi IMPLEMENTED dari database/Auth VERIFIED.
+- **Project cloud:** petora-indonesia — ref `tpqrcjsmijzbtgmertdo`, region `ap-southeast-1`, PostgreSQL 17, estimasi US$0/bulan, status ACTIVE_HEALTHY saat bootstrap.
+- **Batas verifikasi:** Belum ada bukti koneksi CLI lokal, migration, RLS, Auth, atau database security test. Project aktif/healthy hanya membuktikan resource berhasil dibuat, bukan kesiapan fitur aplikasi.
