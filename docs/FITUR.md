@@ -42,6 +42,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | RLS isolasi cabang & medis (BR-001/002/003/004) | terverifikasi | 9 tes `.itest.ts` hijau |
 | Pelanggan & hewan (BR-003) | terverifikasi | 11 tes `.itest.ts` hijau |
 | Kunjungan & rekam medis (BR-001/003/004) | terverifikasi | 13 tes `.itest.ts` hijau |
+| Dashboard ringkasan harian (BR-001) | terverifikasi | 4 tes `.itest.ts` hijau |
 | Inventori & FEFO (BR-006/007) | terverifikasi | 5 tes `.itest.ts` hijau |
 | Kasir & pembayaran (BR-009/010/011/018/020/021) | terverifikasi | 13 tes `.itest.ts` hijau |
 | Autentikasi lokal (sesi + password) | terverifikasi | 14 tes `.itest.ts` hijau |
@@ -79,6 +80,14 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Halaman /app/visits | proses | Daftar kunjungan cabang + buat kunjungan + ubah status; belum uji browser | `src/app/app/visits/page.tsx` |
 | Halaman /app/medical (Dokter) | proses | Rekam medis per pasien lintas cabang; draft→edit→final; belum uji browser | `src/app/app/medical/page.tsx` |
 
+## Ringkasan operasional (src/lib/dashboard, UI)
+
+| Fitur | Status | Kriteria selesai | Lokasi |
+|---|---|---|---|
+| Service dashboard (ringkasan per cabang) | terverifikasi | Kunjungan/tagihan hari ini (zona per cabang) + piutang; RLS batasi cabang | `src/lib/dashboard/service.ts` |
+| API /api/dashboard (GET) | terverifikasi | requireActor + RLS; build hijau | `src/app/api/dashboard/route.ts` |
+| Halaman /app (dashboard) | proses | Kartu total + rincian per cabang + akses modul; belum uji browser | `src/app/app/page.tsx` |
+
 ## Autentikasi lokal (src/lib/auth, tanpa Supabase)
 
 | Fitur | Status | Kriteria selesai | Lokasi |
@@ -108,7 +117,7 @@ Status: `terverifikasi` (jalan + tes hijau), `proses` (sedang dikerjakan),
 | Pengadaan | Wajib v1 | sebagian | Terima stok (pembuatan batch) teruji; PO/batch UI belum |
 | Kasir & transaksi | Wajib v1 | sebagian | Tagihan terpadu + diskon/PPN/pembulatan teruji; UI /app/cashier dibuat, belum uji browser |
 | Pembayaran manual | Wajib v1 | sebagian | Tunai/transfer/QRIS/kartu + sebagian + anti-ganda teruji; UI /app/cashier dibuat, belum uji browser |
-| Laporan operasional | Wajib v1 | rencana | Penjualan/kunjungan/stok/pajak; batas hari per zona |
+| Laporan operasional | Wajib v1 | sebagian | Ringkasan harian per cabang (dashboard) teruji; laporan periode/zona belum |
 | Pet Owner Portal | Wajib v1 | rencana | Hanya baca; hanya data sendiri |
 
 ## Nanti (v2+)
