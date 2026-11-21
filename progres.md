@@ -262,3 +262,12 @@
 - **Tidak dilakukan:** Tidak membuat tabel credential/PIN, custom JWT, Edge Function login, policy RLS, akun uji, atau migration spekulatif.
 - **Blocker:** Supabase account yang terhubung tidak memiliki project yang terdaftar pada saat pemeriksaan; project ref dan environment untuk pengujian end-to-end belum tersedia. Mekanisme username + PIN juga belum dapat ditetapkan tanpa pembuktian sesi Supabase yang valid.
 - **Status tahap:** BLOCKED untuk schema/Auth implementation dan database verification. ADR dokumentasi IMPLEMENTED, keputusan autentikasi PENDING.
+
+
+### Koreksi status PR P0.8
+- **PR:** #7 — https://github.com/petoraindonesia-sys/PETORA-INDONESIA/pull/7
+- **Status:** MERGED
+- **Merge commit:** 687b3d979c87eb6e54093460c6fbca29fa9c2d3a
+- **File yang masuk main:** docs/architecture/adr-0001-staff-authentication.md, progres.md.
+- **Catatan:** PR ini hanya menggabungkan dokumentasi/ADR dan catatan progres. Tidak ada migration, perubahan schema/Auth, database test, atau perubahan project Supabase.
+- **Status tahap P0.8:** BLOCKED untuk implementasi database/Auth dan verifikasi end-to-end. ADR telah MERGED; keputusan mekanisme autentikasi tetap PENDING.
