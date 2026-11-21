@@ -11,3 +11,15 @@
   - Pedoman mencakup tipografi, warna, permukaan, komponen, interaksi, dan responsivitas.
   - Aturan bisnis, arsitektur, dan keputusan sebelumnya tidak berubah.
   - Tidak mengklaim UI telah diimplementasikan sebelum kode dan pengujian tersedia.
+
+
+### Catatan penyelesaian P0.1
+- **Status akhir:** IMPLEMENTED
+- **File diubah:** AGENTS.md, progres.md.
+- **Perubahan:** Apple Design ditetapkan sebagai kontrak visual resmi, termasuk karakter visual, palet, tipografi, komponen, layout, interaksi, aksesibilitas, dan konsistensi antar modul.
+- **Pengujian:** Tidak ada pengujian UI karena belum ada kode frontend.
+- **Verifikasi dokumentasi:** AGENTS.md berhasil diperbarui pada branch main; progres.md dibaca kembali sebelum penutupan entri.
+- **Commit AGENTS.md:** e487a39c46e00077e8310d4a7a52de778ef2f620
+- **Commit entri IN_PROGRESS:** 702d53501c69888627d75683b13472df870c7a60
+- **Status merge:** Langsung berada di main; tidak ada PR.
+- **Catatan:** Kontrak visual sudah ditetapkan, tetapi implementasi UI Apple Design belum dimulai dan belum VERIFIED.
