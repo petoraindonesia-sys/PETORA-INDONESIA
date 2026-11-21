@@ -292,3 +292,14 @@
 - **Risiko yang wajib diuji:** PIN numerik 6 digit hanya memiliki 1.000.000 kombinasi; pembatasan online harus ditegakkan sebelum setiap percobaan Auth dan tidak boleh bergantung pada rate limit IP Supabase saja.
 - **Bukti awal:** Main commit `811173d683d373ea6ae0acc4590651d14e6ba3ad`; ADR-0001 masih PENDING.
 - **Status merge:** UNMERGED sampai PR benar-benar digabung.
+
+
+### Koreksi lingkungan POC — opsi gratis
+- **Keputusan Owner:** "gunakan gratis". POC tidak boleh menggunakan Supabase Development Branch yang berbiaya US$0,01344/jam.
+- **Lingkungan pengganti:** Project Supabase terpisah petora-auth-poc-free, ref yywiviksohbqxyultprz, region Singapore.
+- **Biaya yang dikonfirmasi:** US$0/bulan untuk pembuatan project; tidak ada Development Branch berbayar yang dibuat.
+- **Status project:** ACTIVE_HEALTHY, PostgreSQL 17.12. Project ini terpisah dari project utama petora-indonesia (tpqrcjsmijzbtgmertdo).
+- **Batasan:** Free project tetap dapat memiliki batas kuota/kapasitas. Tidak boleh mengaktifkan layanan/fitur berbayar atau menimbulkan biaya tambahan tanpa persetujuan Owner.
+- **Perubahan scope:** POC dijalankan langsung pada project gratis yang terisolasi, bukan Development Branch. Seluruh tabel, akun, fungsi, dan policy yang kelak dibuat di dalamnya hanya untuk POC dan tidak boleh disalin ke produksi tanpa review.
+- **Bukti:** Project dibuat dan statusnya diverifikasi melalui Supabase MCP pada 2026-11-21. Belum ada schema, migration, akun Auth, Edge Function, atau perubahan konfigurasi yang dibuat.
+- **Status tahap:** IN_PROGRESS; belum ada bukti sesi Auth, RLS, throttling, atau test runtime.
