@@ -49,3 +49,8 @@
 - **Commit penutupan progres:** akan dicatat oleh commit ini.
 - **Status merge:** Perubahan langsung pada main; tidak ada PR.
 - **Catatan:** Kontrak agen diperluas pada level dokumentasi. Belum ada implementasi aplikasi, test runtime, atau deployment yang diverifikasi.
+
+
+#### Koreksi bukti commit P0.2
+- **Commit penutupan progres yang sebenarnya:** 5db565897c8fff72b94358909725af4abeb3f28e
+- Catatan sebelumnya yang menyebut SHA akan dicatat oleh commit tersebut dilengkapi dengan SHA aktual ini. Riwayat sebelumnya dipertahankan.
